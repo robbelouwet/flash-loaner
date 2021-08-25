@@ -2,11 +2,3 @@ node_modules
 build
 .env
 Bundle.sol
-!contracts
-contracts/*
-
-!contracts/bundle
-contracts/bundle/*
-!contracts/bundle/.gitkeep
-
-!contracts/src
