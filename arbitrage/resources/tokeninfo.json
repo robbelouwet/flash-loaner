@@ -1,0 +1,29 @@
+{
+    "WBNB": {
+        "contract": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
+    },
+    "BUSD": {
+        "contract": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"
+    },
+    "USDT": {
+        "contract": "0x55d398326f99059fF775485246999027B3197955"
+    },
+    "USDC": {
+        "contract": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d"
+    },
+    "ETH": {
+        "contract": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8"
+    },
+    "BTCB": {
+        "contract": "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c"
+    },
+    "SFUND": {
+        "contract": "0x477bC8d23c634C154061869478bce96BE6045D12"
+    },
+    "TLM": {
+        "contract": "0x2222227E22102Fe3322098e4CBfE18cFebD57c95"
+    },
+    "TKO": {
+        "contract": "0x9f589e3eabe42ebC94A44727b3f3531C0c877809"
+    }
+}
