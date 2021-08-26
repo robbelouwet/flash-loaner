@@ -20,7 +20,7 @@ for bakery in bakery_pairs:
             pairs.append(pancake)
 
 print(pairs)
-io1 = open('../resources/all_pairs.json', 'w')
+io1 = open('../resources/pancake_bakery_pairs.json', 'w')
 #io1.write(str(pairs).replace('\'', '\"'))
 print(len(pairs))
 print(len(pancakes))

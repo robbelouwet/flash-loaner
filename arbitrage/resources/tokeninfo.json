@@ -1,4 +1,7 @@
 {
+    "Cake": {
+        "contract": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82"
+    },
     "WBNB": {
         "contract": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
     },
@@ -8,22 +11,265 @@
     "USDT": {
         "contract": "0x55d398326f99059fF775485246999027B3197955"
     },
-    "USDC": {
-        "contract": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d"
-    },
     "ETH": {
         "contract": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8"
+    },
+    "USDC": {
+        "contract": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d"
     },
     "BTCB": {
         "contract": "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c"
     },
-    "SFUND": {
-        "contract": "0x477bC8d23c634C154061869478bce96BE6045D12"
+    "TUSD": {
+        "contract": "0x14016E85a25aeb13065688cAFB43044C2ef86784"
+    },
+    "MBOX": {
+        "contract": "0x3203c9E46cA618C8C1cE5dC67e7e9D75f5da2377"
+    },
+    "DOT": {
+        "contract": "0x7083609fCE4d1d8Dc0C979AAb8c869Ea2C873402"
+    },
+    "SAFEMOON": {
+        "contract": "0x8076C74C5e3F5852037F31Ff0093Eeb8c8ADd8D3"
+    },
+    "BELT": {
+        "contract": "0xE0e514c71282b6f4e823703a39374Cf58dc3eA4f"
+    },
+    "DAI": {
+        "contract": "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3"
+    },
+    "ALPACA": {
+        "contract": "0x8F0528cE5eF7B51152A59745bEfDD91D97091d2F"
+    },
+    "LINK": {
+        "contract": "0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD"
+    },
+    "HERO": {
+        "contract": "0xD40bEDb44C081D2935eebA6eF5a3c8A31A1bBE13"
+    },
+    "ADA": {
+        "contract": "0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47"
+    },
+    "XRP": {
+        "contract": "0x1D2F0da169ceB9fC7B3144628dB156f3F6c60dBE"
+    },
+    "BabyDoge": {
+        "contract": "0xc748673057861a797275CD8A068AbB95A902e8de"
+    },
+    "AXS": {
+        "contract": "0x715D400F88C167884bbCc41C5FeA407ed4D2f8A0"
+    },
+    "UST": {
+        "contract": "0x23396cF899Ca06c4472205fC903bDB4de249D6fC"
+    },
+    "UNI": {
+        "contract": "0xBf5140A22578168FD562DCcF235E5D43A02ce9B1"
+    },
+    "BTT": {
+        "contract": "0x8595F9dA7b868b1822194fAEd312235E43007b49"
+    },
+    "XVS": {
+        "contract": "0xcF6BB5389c92Bdda8a3747Ddb454cB7a64626C63"
+    },
+    "rUSD": {
+        "contract": "0x07663837218A003e66310a01596af4bf4e44623D"
+    },
+    "TRX": {
+        "contract": "0x85EAC5Ac2F758618dFa09bDbe0cf174e7d574D5B"
+    },
+    "QBT": {
+        "contract": "0x17B7163cf1Dbd286E262ddc68b553D899B93f526"
+    },
+    "C98": {
+        "contract": "0xaEC945e04baF28b135Fa7c640f624f8D90F1C3a6"
+    },
+    "DOGE": {
+        "contract": "0x4206931337dc273a630d328dA6441786BfaD668f"
+    },
+    "VAI": {
+        "contract": "0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7"
+    },
+    "SFP": {
+        "contract": "0xD41FDb03Ba84762dD66a0af1a6C8540FF1ba5dfb"
+    },
+    "ALPHA": {
+        "contract": "0xa1faa113cbE53436Df28FF0aEe54275c13B40975"
+    },
+    "HUNNY": {
+        "contract": "0x565b72163f17849832A692A3c5928cc502f46D69"
+    },
+    "PVU": {
+        "contract": "0x31471E0791fCdbE82fbF4C44943255e923F1b794"
+    },
+    "TKO": {
+        "contract": "0x9f589e3eabe42ebC94A44727b3f3531C0c877809"
+    },
+    "CBET": {
+        "contract": "0xc212D39E35F22F259457bE79Fc2D822FA7122e6e"
+    },
+    "BEL": {
+        "contract": "0x8443f091997f06a61670B735ED92734F5628692F"
+    },
+    "TSC": {
+        "contract": "0xA2a26349448ddAfAe34949a6Cc2cEcF78c0497aC"
+    },
+    "SUSHI": {
+        "contract": "0x947950BcC74888a40Ffa2593C5798F11Fc9124C4"
+    },
+    "ALICE": {
+        "contract": "0xAC51066d7bEC65Dc4589368da368b212745d63E8"
+    },
+    "WIN": {
+        "contract": "0xaeF0d72a118ce24feE3cD1d43d383897D05B4e99"
+    },
+    "CHR": {
+        "contract": "0xf9CeC8d50f6c8ad3Fb6dcCEC577e05aA32B224FE"
     },
     "TLM": {
         "contract": "0x2222227E22102Fe3322098e4CBfE18cFebD57c95"
     },
-    "TKO": {
-        "contract": "0x9f589e3eabe42ebC94A44727b3f3531C0c877809"
+    "RACA": {
+        "contract": "0x12BB890508c125661E03b09EC06E404bc9289040"
+    },
+    "SFUND": {
+        "contract": "0x477bC8d23c634C154061869478bce96BE6045D12"
+    },
+    "BP": {
+        "contract": "0xACB8f52DC63BB752a51186D1c55868ADbFfEe9C1"
+    },
+    "PORNROCKET": {
+        "contract": "0xCF9f991b14620f5ad144Eec11f9bc7Bf08987622"
+    },
+    "DODO": {
+        "contract": "0x67ee3Cb086F8a16f34beE3ca72FAD36F7Db929e2"
+    },
+    "SGO": {
+        "contract": "0xe5D46cC0Fd592804B36F9dc6D2ed7D4D149EBd6F"
+    },
+    "NRV": {
+        "contract": "0x42F6f551ae042cBe50C739158b4f0CAC0Edb9096"
+    },
+    "CLU": {
+        "contract": "0x1162E2EfCE13f99Ed259fFc24d99108aAA0ce935"
+    },
+    "INJ": {
+        "contract": "0xa2B726B1145A4773F68593CF171187d8EBe4d495"
+    },
+    "SXP": {
+        "contract": "0x47BEAd2563dCBf3bF2c9407fEa4dC236fAbA485A"
+    },
+    "TWT": {
+        "contract": "0x4B0F1812e5Df2A09796481Ff14017e6005508003"
+    },
+    "BUNNY": {
+        "contract": "0xC9849E6fdB743d08fAeE3E34dd2D1bc69EA11a51"
+    },
+    "WOOP": {
+        "contract": "0x8b303d5BbfBbf46F1a4d9741E491e06986894e18"
+    },
+    "LTC": {
+        "contract": "0x4338665CBB7B2485A8855A139b75D5e34AB0DB94"
+    },
+    "TPT": {
+        "contract": "0xECa41281c24451168a37211F0bc2b8645AF45092"
+    },
+    "WHALE": {
+        "contract": "0x587C16b84c64751760f6e3e7e32F896634704352"
+    },
+    "BMON": {
+        "contract": "0x08ba0619b1e7A582E0BCe5BBE9843322C954C340"
+    },
+    "PING": {
+        "contract": "0x5546600f77EdA1DCF2e8817eF4D617382E7f71F5"
+    },
+    "RISE": {
+        "contract": "0xC7D43F2B51F44f09fBB8a691a0451E8FFCF36c0a"
+    },
+    "SMARS": {
+        "contract": "0xC0366a104b429f0806BfA98d0008DAA9555b2BEd"
+    },
+    "MiniDOGE": {
+        "contract": "0xBa07EED3d09055d60CAEf2bDfCa1c05792f2dFad"
+    },
+    "REEF": {
+        "contract": "0xF21768cCBC73Ea5B6fd3C687208a7c2def2d966e"
+    },
+    "CP": {
+        "contract": "0x82C19905B036bf4E329740989DCF6aE441AE26c1"
+    },
+    "EPS": {
+        "contract": "0xA7f552078dcC247C2684336020c03648500C6d9F"
+    },
+    "PHA": {
+        "contract": "0x0112e557d400474717056C4e6D40eDD846F38351"
+    },
+    "RAMP": {
+        "contract": "0x8519EA49c997f50cefFa444d240fB655e89248Aa"
+    },
+    "SGRv2": {
+        "contract": "0x56231D55391bd6382bc2a0761a644ea188B007cc"
+    },
+    "LBNB": {
+        "contract": "0x43C37e8240d0fCCEF747d12e201Bf295e4226388"
+    },
+    "BAND": {
+        "contract": "0xAD6cAEb32CD2c308980a548bD0Bc5AA4306c6c18"
+    },
+    "ONE": {
+        "contract": "0x03fF0ff224f904be3118461335064bB48Df47938"
+    },
+    "SBNB": {
+        "contract": "0xE90444C38a8Cd2DCEEe9D954042ac817a794E9A9"
+    },
+    "IOTX": {
+        "contract": "0x9678E42ceBEb63F23197D726B29b1CB20d0064E5"
+    },
+    "WOO": {
+        "contract": "0x4691937a7508860F876c9c0a2a617E7d9E945D4B"
+    },
+    "CHESS": {
+        "contract": "0x20de22029ab63cf9A7Cf5fEB2b737Ca1eE4c82A6"
+    },
+    "ZIL": {
+        "contract": "0xb86AbCb37C3A4B64f74f59301AFF131a1BEcC787"
+    },
+    "SKILL": {
+        "contract": "0x154A9F9cbd3449AD22FDaE23044319D6eF2a1Fab"
+    },
+    "BTCST": {
+        "contract": "0x78650B139471520656b9E7aA7A5e9276814a38e9"
+    },
+    "SPS": {
+        "contract": "0x1633b7157e7638C4d6593436111Bf125Ee74703F"
+    },
+    "ELEPHANT": {
+        "contract": "0xE283D0e3B8c102BAdF5E8166B73E02D96d92F688"
+    },
+    "MASK": {
+        "contract": "0x2eD9a5C8C13b93955103B9a7C167B67Ef4d568a3"
+    },
+    "YOOSHI": {
+        "contract": "0x02fF5065692783374947393723dbA9599e59F591"
+    },
+    "ATA": {
+        "contract": "0xA2120b9e674d3fC3875f415A7DF52e382F141225"
+    },
+    "AMPL": {
+        "contract": "0xDB021b1B247fe2F1fa57e0A87C748Cc1E321F07F"
+    },
+    "NEWB": {
+        "contract": "0x545f90dC35CA1e6129f1fEd354b3e2DF12034261"
+    },
+    "HOTCROSS": {
+        "contract": "0x4FA7163E153419E0E1064e418dd7A99314Ed27b6"
+    },
+    "REVV": {
+        "contract": "0x833F307aC507D47309fD8CDD1F835BeF8D702a93"
+    },
+    "FEED": {
+        "contract": "0x67d66e8Ec1Fd25d98B3Ccd3B19B7dc4b4b7fC493"
+    },
+    "LINA": {
+        "contract": "0x762539b45A1dCcE3D36d080F74d1AED37844b878"
     }
 }
