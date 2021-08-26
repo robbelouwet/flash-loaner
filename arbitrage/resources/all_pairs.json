@@ -1,0 +1,55 @@
+{
+  "pairs": [
+    [
+      "WBNB",
+      "BUSD"
+    ],
+    [
+      "USDT",
+      "BUSD"
+    ],
+    [
+      "USDC",
+      "BUSD"
+    ],
+    [
+      "BETH",
+      "ETH"
+    ],
+    [
+      "WBNB",
+      "USDT"
+    ],
+    [
+      "BAKE",
+      "WBNB"
+    ],
+    [
+      "BTCB",
+      "WBNB"
+    ],
+    [
+      "SFUND",
+      "WBNB"
+    ],
+    [
+      "ETH",
+      "WBNB"
+    ],
+    [
+      "TLM",
+      "WBNB"
+    ],
+    [
+      "AUTO",
+      "WBNB"
+    ],
+    [
+      "TKO",
+      "WBNB"
+    ]
+  ],
+  "tokens": {
+
+  }
+}

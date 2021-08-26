@@ -1,0 +1,125 @@
+{
+    "chainId": 56,
+    "price": "0.050995",
+    "guaranteedPrice": "0.050995",
+    "to": "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
+    "data": "0xc43c9ef600000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000056bc75e2d6310000000000000000000000000000000000000000000000000000000000000004dd04a00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000003000000000000000000000000e9e7cea3dedca5984780bafc599bd69add087d56000000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c000000000000000000000000ac51066d7bec65dc4589368da368b212745d63e8869584cd00000000000000000000000010000000000000000000000000000000000000110000000000000000000000000000000000000000000000374cdb4bff6127a863",
+    "value": "0",
+    "gas": "171000",
+    "estimatedGas": "171000",
+    "gasPrice": "0",
+    "protocolFee": "0",
+    "minimumProtocolFee": "0",
+    "buyTokenAddress": "0xac51066d7bec65dc4589368da368b212745d63e8",
+    "sellTokenAddress": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+    "buyAmount": "5099594",
+    "sellAmount": "100000000000000000000",
+    "sources": [
+        {
+            "name": "BakerySwap",
+            "proportion": "0"
+        },
+        {
+            "name": "Belt",
+            "proportion": "0"
+        },
+        {
+            "name": "DODO",
+            "proportion": "0"
+        },
+        {
+            "name": "DODO_V2",
+            "proportion": "0"
+        },
+        {
+            "name": "Ellipsis",
+            "proportion": "0"
+        },
+        {
+            "name": "Mooniswap",
+            "proportion": "0"
+        },
+        {
+            "name": "MultiHop",
+            "proportion": "0"
+        },
+        {
+            "name": "Nerve",
+            "proportion": "0"
+        },
+        {
+            "name": "PancakeSwap",
+            "proportion": "0"
+        },
+        {
+            "name": "PancakeSwap_V2",
+            "proportion": "1"
+        },
+        {
+            "name": "SushiSwap",
+            "proportion": "0"
+        },
+        {
+            "name": "Smoothy",
+            "proportion": "0"
+        },
+        {
+            "name": "ApeSwap",
+            "proportion": "0"
+        },
+        {
+            "name": "CafeSwap",
+            "proportion": "0"
+        },
+        {
+            "name": "CheeseSwap",
+            "proportion": "0"
+        },
+        {
+            "name": "JulSwap",
+            "proportion": "0"
+        },
+        {
+            "name": "LiquidityProvider",
+            "proportion": "0"
+        },
+        {
+            "name": "WaultSwap",
+            "proportion": "0"
+        },
+        {
+            "name": "FirebirdOneSwap",
+            "proportion": "0"
+        },
+        {
+            "name": "JetSwap",
+            "proportion": "0"
+        },
+        {
+            "name": "ACryptoS",
+            "proportion": "0"
+        }
+    ],
+    "orders": [
+        {
+            "makerToken": "0xac51066d7bec65dc4589368da368b212745d63e8",
+            "takerToken": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+            "makerAmount": "5099594",
+            "takerAmount": "100000000000000000000",
+            "fillData": {
+                "tokenAddressPath": [
+                    "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+                    "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+                    "0xac51066d7bec65dc4589368da368b212745d63e8"
+                ],
+                "router": "0x10ed43c718714eb63d5aa57b78b54704e256024e"
+            },
+            "source": "PancakeSwap_V2",
+            "sourcePathId": "0x8631e59d2893ba2ed5b87b0ba5192428d24104107bb4f05b47ab3529d75155aa",
+            "type": 0
+        }
+    ],
+    "allowanceTarget": "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
+    "sellTokenToEthRate": "485.079285458499578962",
+    "buyTokenToEthRate": "24.380398"
+}
