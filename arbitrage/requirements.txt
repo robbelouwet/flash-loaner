@@ -1,2 +1,2 @@
-pythonpancakes
-web3
+web3~=5.23.0
+requests~=2.26.0

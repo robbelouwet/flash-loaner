@@ -1,6 +1,12 @@
 import requests
 import json
 
+"""
+This script is used to test out th api for realtime token prices.
+0x is an API that provides real time prices of liquidity pools from all kinds of DEX'es on the binance smart chain
+We're going to use this api to get real time price data
+"""
+
 # 'BUY' = maker
 # 'sell' = taker
 
