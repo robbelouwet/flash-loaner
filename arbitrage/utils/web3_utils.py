@@ -1,12 +1,16 @@
 import json
-
 from web3 import Web3
 import requests
 from web3.exceptions import ABIFunctionNotFound
-from utils.globals import get_logger
+from utils.globals import get_logger, network_data
 
 logger = get_logger()
 web3 = Web3(Web3.HTTPProvider('https://bsc-dataseed1.binance.org'))
+data = network_data()
+
+
+def get_web3():
+    return web3
 
 
 def get_decimals_from_contract(address, symbol):
@@ -42,17 +46,15 @@ def get_decimals_from_api(address, symbol):
 
 
 def get_symbol_by_address(address):
-    io = open('../resources/pancakeswap_tokeninfo.json', 'r')
-    tokens = json.loads(io.read())
+    tokens = data['all_tokens']
 
     for key in tokens.keys():
-        if tokens[key]['contract'].upper() == address.upper():
-            return key
+        if key == web3.toChecksumAddress(address):
+            return tokens[key]['symbol']
 
 
 def get_address_by_symbol(symbol):
-    io = open('../resources/pancake_tokens.json')
-    tokens = json.loads(io.read())['data']
+    tokens = data['all_tokens']
 
     for key in tokens.keys():
         if tokens[key]['symbol'] == symbol:
