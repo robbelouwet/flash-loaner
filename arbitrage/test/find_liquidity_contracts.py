@@ -6,7 +6,7 @@ from web3 import Web3
 web3 = Web3(Web3.HTTPProvider('https://bsc-dataseed1.binance.org'))
 
 network_data = globals.network_data()
-all_pairs = globals.network_data()['dex']['pancakeBakeryPairs']
+all_pairs = globals.network_data()['pairs']['PancakeSwap_BakerySwap']
 
 
 def get_pancake_pools(dex):

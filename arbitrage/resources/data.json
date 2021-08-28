@@ -1,717 +1,845 @@
 {
-  "dex": {
-    "pancakeBakeryPairs": [
-      [
-        "WBNB",
-        "BUSD"
-      ],
-      [
-        "USDT",
-        "BUSD"
-      ],
-      [
-        "USDC",
-        "BUSD"
-      ],
-      [
-        "WBNB",
-        "USDT"
-      ],
-      [
-        "BTCB",
-        "WBNB"
-      ],
-      [
-        "SFUND",
-        "WBNB"
-      ],
-      [
-        "ETH",
-        "WBNB"
-      ],
-      [
-        "TLM",
-        "WBNB"
-      ],
-      [
-        "TKO",
-        "WBNB"
-      ]
-    ],
-    "PancakeSwap": {
-      "factory": "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73",
-      "liquidityPools": {
-        "WBNB_BUSD": "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16",
-        "USDT_BUSD": "0x7EFaEf62fDdCCa950418312c6C91Aef321375A00",
-        "USDC_BUSD": "0x2354ef4DF11afacb85a5C7f98B624072ECcddbB1",
-        "WBNB_USDT": "0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE",
-        "BTCB_WBNB": "0x61EB789d75A95CAa3fF50ed7E47b96c132fEc082",
-        "SFUND_WBNB": "0x74fA517715C4ec65EF01d55ad5335f90dce7CC87",
-        "ETH_WBNB": "0x74E4716E431f45807DCF19f284c7aA99F18a4fbc",
-        "TLM_WBNB": "0xE6b421a4408c82381b226Ab5B6F8C4b639044359",
-        "TKO_WBNB": "0xFFd4B200d3C77A0B691B5562D804b3bd54294e6e"
-      }
+    "dex": {
+        "PancakeSwap": {
+            "factory": "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73",
+            "liquidityPools": {
+                "WBNB_BUSD": {
+                    "token0": "WBNB",
+                    "reserve0_rebased": 585380.0715397354,
+                    "token1": "BUSD",
+                    "reserve1_rebased": 283840711.76372373,
+                    "block_timestamp": 1630151643,
+                    "pool": "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16"
+                },
+                "USDT_BUSD": {
+                    "token0": "USDT",
+                    "reserve0_rebased": 157769784.07181078,
+                    "token1": "BUSD",
+                    "reserve1_rebased": 158052390.05142653,
+                    "block_timestamp": 1630151640,
+                    "pool": "0x7EFaEf62fDdCCa950418312c6C91Aef321375A00"
+                },
+                "USDC_BUSD": {
+                    "token0": "USDC",
+                    "reserve0_rebased": 85875287.0426449,
+                    "token1": "BUSD",
+                    "reserve1_rebased": 85946175.01318264,
+                    "block_timestamp": 1630151601,
+                    "pool": "0x2354ef4DF11afacb85a5C7f98B624072ECcddbB1"
+                },
+                "WBNB_USDT": {
+                    "token0": "USDT",
+                    "reserve0_rebased": 142662187.54303768,
+                    "token1": "WBNB",
+                    "reserve1_rebased": 294337.3145881293,
+                    "block_timestamp": 1630151643,
+                    "pool": "0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE"
+                },
+                "BTCB_WBNB": {
+                    "token0": "BTCB",
+                    "reserve0_rebased": 1567.7314734415045,
+                    "token1": "WBNB",
+                    "reserve1_rebased": 157362.6866056595,
+                    "block_timestamp": 1630151640,
+                    "pool": "0x61EB789d75A95CAa3fF50ed7E47b96c132fEc082"
+                },
+                "SFUND_WBNB": {
+                    "token0": "SFUND",
+                    "reserve0_rebased": 1580449.8552755022,
+                    "token1": "WBNB",
+                    "reserve1_rebased": 10445.36793735814,
+                    "block_timestamp": 1630151637,
+                    "pool": "0x74fA517715C4ec65EF01d55ad5335f90dce7CC87"
+                },
+                "ETH_WBNB": {
+                    "token0": "ETH",
+                    "reserve0_rebased": 39442.46558082877,
+                    "token1": "WBNB",
+                    "reserve1_rebased": 262594.7432064835,
+                    "block_timestamp": 1630151625,
+                    "pool": "0x74E4716E431f45807DCF19f284c7aA99F18a4fbc"
+                },
+                "TLM_WBNB": {
+                    "token0": "TLM",
+                    "reserve0_rebased": 20595377.2665,
+                    "token1": "WBNB",
+                    "reserve1_rebased": 14854.463594115992,
+                    "block_timestamp": 1630151646,
+                    "pool": "0xE6b421a4408c82381b226Ab5B6F8C4b639044359"
+                },
+                "TKO_WBNB": {
+                    "token0": "TKO",
+                    "reserve0_rebased": 2976141.6728636567,
+                    "token1": "WBNB",
+                    "reserve1_rebased": 18917.79513370867,
+                    "block_timestamp": 1630151454,
+                    "pool": "0xFFd4B200d3C77A0B691B5562D804b3bd54294e6e"
+                }
+            }
+        },
+        "BakerySwap": {
+            "factory": "0x01bF7C66c6BD861915CdaaE475042d3c4BaE16A7",
+            "router": "0xCDe540d7eAFE93aC5fE6233Bee57E1270D3E330F",
+            "liquidityPools": {
+                "WBNB_BUSD": {
+                    "token0": "WBNB",
+                    "reserve0_rebased": 1801.0060262787451,
+                    "token1": "BUSD",
+                    "reserve1_rebased": 873830.2635167262,
+                    "block_timestamp": 1630151460,
+                    "pool": "0x559e3D9611E9cB8a77c11335Bdac49621382188B"
+                },
+                "USDT_BUSD": {
+                    "token0": "USDT",
+                    "reserve0_rebased": 104936.95435391463,
+                    "token1": "BUSD",
+                    "reserve1_rebased": 105024.21269766349,
+                    "block_timestamp": 1630150804,
+                    "pool": "0xbcF3278098417E23d941613ce36a7cE9428724A5"
+                },
+                "USDC_BUSD": {
+                    "token0": "USDC",
+                    "reserve0_rebased": 20421309.791853175,
+                    "token1": "BUSD",
+                    "reserve1_rebased": 20415495.999992583,
+                    "block_timestamp": 1630143182,
+                    "pool": "0x56CDE265aaD310e623C8f8994a5143582659aBfC"
+                },
+                "WBNB_USDT": {
+                    "token0": "USDT",
+                    "reserve0_rebased": 347361.6569111981,
+                    "token1": "WBNB",
+                    "reserve1_rebased": 717.1204080305648,
+                    "block_timestamp": 1630151631,
+                    "pool": "0x9Ec271C041a18aA7beF070A1F196eea1D06Ab7cb"
+                },
+                "BTCB_WBNB": {
+                    "token0": "BTCB",
+                    "reserve0_rebased": 431.3891727179487,
+                    "token1": "WBNB",
+                    "reserve1_rebased": 43340.8973919542,
+                    "block_timestamp": 1630150798,
+                    "pool": "0x58521373474810915b02FE968D1BCBe35Fc61E09"
+                },
+                "SFUND_WBNB": {
+                    "token0": "SFUND",
+                    "reserve0_rebased": 173522.7202218209,
+                    "token1": "WBNB",
+                    "reserve1_rebased": 1143.3688573928782,
+                    "block_timestamp": 1630151385,
+                    "pool": "0x782f3f0d2b321D5aB7F15cd1665B95EC479Dcfa5"
+                },
+                "ETH_WBNB": {
+                    "token0": "ETH",
+                    "reserve0_rebased": 190.8529802712052,
+                    "token1": "WBNB",
+                    "reserve1_rebased": 1272.7220325936717,
+                    "block_timestamp": 1630148665,
+                    "pool": "0xa50b9c5DB61C855D5939aa1a66B26Df77745809b"
+                },
+                "TLM_WBNB": {
+                    "token0": "TLM",
+                    "reserve0_rebased": 116862.5214,
+                    "token1": "WBNB",
+                    "reserve1_rebased": 83.82175744492443,
+                    "block_timestamp": 1630151649,
+                    "pool": "0x0D1C34C4AAA29CC9315b473aC8384DCE3B7C923A"
+                },
+                "TKO_WBNB": {
+                    "token0": "TKO",
+                    "reserve0_rebased": 7647.309519951058,
+                    "token1": "WBNB",
+                    "reserve1_rebased": 48.7903576184456,
+                    "block_timestamp": 1630151616,
+                    "pool": "0x1d810281F70247Ba13eA34872251030B0e1C8265"
+                }
+            }
+        }
     },
-    "BakerySwap": {
-      "factory": "0x01bF7C66c6BD861915CdaaE475042d3c4BaE16A7",
-      "router": "0xCDe540d7eAFE93aC5fE6233Bee57E1270D3E330F",
-      "liquidityPools": {
-        "WBNB_BUSD": "0x559e3D9611E9cB8a77c11335Bdac49621382188B",
-        "USDT_BUSD": "0xbcF3278098417E23d941613ce36a7cE9428724A5",
-        "USDC_BUSD": "0x56CDE265aaD310e623C8f8994a5143582659aBfC",
-        "WBNB_USDT": "0x9Ec271C041a18aA7beF070A1F196eea1D06Ab7cb",
-        "BTCB_WBNB": "0x58521373474810915b02FE968D1BCBe35Fc61E09",
-        "SFUND_WBNB": "0x782f3f0d2b321D5aB7F15cd1665B95EC479Dcfa5",
-        "ETH_WBNB": "0xa50b9c5DB61C855D5939aa1a66B26Df77745809b",
-        "TLM_WBNB": "0x0D1C34C4AAA29CC9315b473aC8384DCE3B7C923A",
-        "TKO_WBNB": "0x1d810281F70247Ba13eA34872251030B0e1C8265"
-      }
+    "all_tokens": {
+        "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82": {
+            "name": "PancakeSwap Token",
+            "symbol": "Cake",
+            "price": "25.48269615170430535596301706226",
+            "price_BNB": "0.05203970321020509891202821427723",
+            "decimals": 18
+        },
+        "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c": {
+            "name": "Wrapped BNB",
+            "symbol": "WBNB",
+            "price": "489.7010124043727157072240298755",
+            "price_BNB": "1",
+            "decimals": 18
+        },
+        "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56": {
+            "name": "BUSD Token",
+            "symbol": "BUSD",
+            "price": "0.9998961048074054912628652547975",
+            "price_BNB": "0.002041948787821568254024535443",
+            "decimals": 18
+        },
+        "0x55d398326f99059fF775485246999027B3197955": {
+            "name": "Tether USD",
+            "symbol": "USDT",
+            "price": "1.00021982422661287853260789493",
+            "price_BNB": "0.002042610722648613796711426472856",
+            "decimals": 18
+        },
+        "0x2170Ed0880ac9A755fd29B2688956BD959F933F8": {
+            "name": "Ethereum Token",
+            "symbol": "ETH",
+            "price": "3118.10437567429973980182023241",
+            "price_BNB": "6.367280920920049866378771230776",
+            "decimals": 18
+        },
+        "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d": {
+            "name": "USD Coin",
+            "symbol": "USDC",
+            "price": "1.001201041714053944421177279575",
+            "price_BNB": "0.002044514951680981784668876196187",
+            "decimals": 18
+        },
+        "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c": {
+            "name": "BTCB Token",
+            "symbol": "BTCB",
+            "price": "47195.57275624724834213088597285",
+            "price_BNB": "96.3748542007522362578187238359",
+            "decimals": 18
+        },
+        "0x14016E85a25aeb13065688cAFB43044C2ef86784": {
+            "name": "TrueUSD",
+            "symbol": "TUSD",
+            "price": "1.00003302858158035203922274655",
+            "price_BNB": "0.002047273453530975294420563777924",
+            "decimals": 18
+        },
+        "0x3203c9E46cA618C8C1cE5dC67e7e9D75f5da2377": {
+            "name": "Mobox",
+            "symbol": "MBOX",
+            "price": "8.04236848370853728990657600462",
+            "price_BNB": "0.0164237785301862825790597481447",
+            "decimals": 18
+        },
+        "0x7083609fCE4d1d8Dc0C979AAb8c869Ea2C873402": {
+            "name": "Polkadot Token",
+            "symbol": "DOT",
+            "price": "24.79312314466752934934133049435",
+            "price_BNB": "0.05062844630880071833174926949803",
+            "decimals": 18
+        },
+        "0x8076C74C5e3F5852037F31Ff0093Eeb8c8ADd8D3": {
+            "name": "SafeMoon",
+            "symbol": "SAFEMOON",
+            "price": "0.00000237836978491037598320818802535",
+            "price_BNB": "0.00000000485659938215323835767778664216",
+            "decimals": 9
+        },
+        "0xE0e514c71282b6f4e823703a39374Cf58dc3eA4f": {
+            "name": "BELT Token",
+            "symbol": "BELT",
+            "price": "14.91747790883450396859249228074",
+            "price_BNB": "0.03057421453401559238195779146908",
+            "decimals": 18
+        },
+        "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3": {
+            "name": "Dai Token",
+            "symbol": "DAI",
+            "price": "1.004886605195122238319231375482",
+            "price_BNB": "0.002051534012916824036373293268486",
+            "decimals": 18
+        },
+        "0x8F0528cE5eF7B51152A59745bEfDD91D97091d2F": {
+            "name": "AlpacaToken",
+            "symbol": "ALPACA",
+            "price": "1.244204562259562438669770836442",
+            "price_BNB": "0.002540570349710136364992503845792",
+            "decimals": 18
+        },
+        "0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD": {
+            "name": "ChainLink Token",
+            "symbol": "LINK",
+            "price": "25.35785057605373114970544324665",
+            "price_BNB": "0.0517690883770451959814684272724",
+            "decimals": 18
+        },
+        "0xD40bEDb44C081D2935eebA6eF5a3c8A31A1bBE13": {
+            "name": "Metahero",
+            "symbol": "HERO",
+            "price": "0.0315380389921558099158187622893",
+            "price_BNB": "0.0000644055461946222112147259559083",
+            "decimals": 18
+        },
+        "0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47": {
+            "name": "Cardano Token",
+            "symbol": "ADA",
+            "price": "2.593449261715282572594843809233",
+            "price_BNB": "0.00529623038163076748748839315678",
+            "decimals": 18
+        },
+        "0x1D2F0da169ceB9fC7B3144628dB156f3F6c60dBE": {
+            "name": "XRP Token",
+            "symbol": "XRP",
+            "price": "1.123455045263306540520136426903",
+            "price_BNB": "0.00229426551147671792883563253946",
+            "decimals": 18
+        },
+        "0xc748673057861a797275CD8A068AbB95A902e8de": {
+            "name": "Baby Doge Coin",
+            "symbol": "BabyDoge",
+            "price": "0.000000001055559828082333522935806229945",
+            "price_BNB": "0.000000000002155372552739456758237984639525",
+            "decimals": 9
+        },
+        "0x715D400F88C167884bbCc41C5FeA407ed4D2f8A0": {
+            "name": "Axie Infinity Shard",
+            "symbol": "AXS",
+            "price": "69.8206636985557268433473972051",
+            "price_BNB": "0.1425231050748139547816778918281",
+            "decimals": 18
+        },
+        "0x23396cF899Ca06c4472205fC903bDB4de249D6fC": {
+            "name": "Wrapped UST Token",
+            "symbol": "UST",
+            "price": "1.003747186255602926645231382833",
+            "price_BNB": "0.00204988095104079113673742956892",
+            "decimals": 18
+        },
+        "0xBf5140A22578168FD562DCcF235E5D43A02ce9B1": {
+            "name": "Uniswap",
+            "symbol": "UNI",
+            "price": "26.14060005276984107542047376847",
+            "price_BNB": "0.05337875551640466531816209341086",
+            "decimals": 18
+        },
+        "0x8595F9dA7b868b1822194fAEd312235E43007b49": {
+            "name": "BitTorrent",
+            "symbol": "BTT",
+            "price": "0.00413066111713761517929612591683",
+            "price_BNB": "0.00000843464416649393180796567819921",
+            "decimals": 18
+        },
+        "0xcF6BB5389c92Bdda8a3747Ddb454cB7a64626C63": {
+            "name": "Venus",
+            "symbol": "XVS",
+            "price": "33.25232231617854093910389727463",
+            "price_BNB": "0.0679107400364589640747361415814",
+            "decimals": 18
+        },
+        "0x07663837218A003e66310a01596af4bf4e44623D": {
+            "name": "rUSD",
+            "symbol": "rUSD",
+            "price": "0.996404253056177620400846958538",
+            "price_BNB": "0.002055051092381432217521578312282",
+            "decimals": 18
+        },
+        "0x85EAC5Ac2F758618dFa09bDbe0cf174e7d574D5B": {
+            "name": "TRON",
+            "symbol": "TRX",
+            "price": "0.0850173829126130263546139056736",
+            "price_BNB": "0.0001735995753788443408670173065671",
+            "decimals": 18
+        },
+        "0x17B7163cf1Dbd286E262ddc68b553D899B93f526": {
+            "name": "Qubit Token",
+            "symbol": "QBT",
+            "price": "0.527232979833253648948848092184",
+            "price_BNB": "0.00107658845180201450000923337074",
+            "decimals": 18
+        },
+        "0xaEC945e04baF28b135Fa7c640f624f8D90F1C3a6": {
+            "name": "Coin98",
+            "symbol": "C98",
+            "price": "5.04451094075125365645814536254",
+            "price_BNB": "0.01030120586433610855196143877051",
+            "decimals": 18
+        },
+        "0xbA2aE424d960c26247Dd6c32edC70B295c744C43": {
+            "name": "Dogecoin",
+            "symbol": "DOGE",
+            "price": "0.2774937947500735909850321568102",
+            "price_BNB": "0.0005666858758969225837898918624494",
+            "decimals": 8
+        },
+        "0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7": {
+            "name": "VAI Stablecoin",
+            "symbol": "VAI",
+            "price": "0.798910465574371257134934590645",
+            "price_BNB": "0.001630967150420885078911815694425",
+            "decimals": 18
+        },
+        "0xD41FDb03Ba84762dD66a0af1a6C8540FF1ba5dfb": {
+            "name": "SafePal Token",
+            "symbol": "SFP",
+            "price": "1.638373066145809909913522911212",
+            "price_BNB": "0.003345408732876748414712527167895",
+            "decimals": 18
+        },
+        "0xa1faa113cbE53436Df28FF0aEe54275c13B40975": {
+            "name": "AlphaToken",
+            "symbol": "ALPHA",
+            "price": "1.113433722163201034427069345503",
+            "price_BNB": "0.00228234657985836282888507150996",
+            "decimals": 18
+        },
+        "0x565b72163f17849832A692A3c5928cc502f46D69": {
+            "name": "Hunny Token",
+            "symbol": "HUNNY",
+            "price": "1.162207352759629601139976640275",
+            "price_BNB": "0.002373213495168759311308632841857",
+            "decimals": 18
+        },
+        "0x31471E0791fCdbE82fbF4C44943255e923F1b794": {
+            "name": "Plant vs Undead Token",
+            "symbol": "PVU",
+            "price": "24.0432632026460100421760338931",
+            "price_BNB": "0.04910021342804847574691260239885",
+            "decimals": 18
+        },
+        "0x9f589e3eabe42ebC94A44727b3f3531C0c877809": {
+            "name": "Tokocrypto Token",
+            "symbol": "TKO",
+            "price": "2.893325466606779396716018021566",
+            "price_BNB": "0.00590794963104631493461300786592",
+            "decimals": 18
+        },
+        "0xc212D39E35F22F259457bE79Fc2D822FA7122e6e": {
+            "name": "CBET",
+            "symbol": "CBET",
+            "price": "0.0000003434411939569436251042849056817",
+            "price_BNB": "0.000000000708990448852754192192452316974",
+            "decimals": 9
+        },
+        "0x8443f091997f06a61670B735ED92734F5628692F": {
+            "name": "Bella Protocol",
+            "symbol": "BEL",
+            "price": "2.559543402595254016165204162257",
+            "price_BNB": "0.00524661123062309649337235905982",
+            "decimals": 18
+        },
+        "0xA2a26349448ddAfAe34949a6Cc2cEcF78c0497aC": {
+            "name": "TrusterCoin",
+            "symbol": "TSC",
+            "price": "0.0753930106594846095740726778448",
+            "price_BNB": "0.000153964051470937190968387406773",
+            "decimals": 9
+        },
+        "0x947950BcC74888a40Ffa2593C5798F11Fc9124C4": {
+            "name": "SushiToken",
+            "symbol": "SUSHI",
+            "price": "11.65671376455319914228546238655",
+            "price_BNB": "0.02379716039810490367543269670732",
+            "decimals": 18
+        },
+        "0xAC51066d7bEC65Dc4589368da368b212745d63E8": {
+            "name": "ALICE",
+            "symbol": "ALICE",
+            "price": "19.69759813373210082089743791544",
+            "price_BNB": "0.0402506177336568891021645592799",
+            "decimals": 6
+        },
+        "0xaeF0d72a118ce24feE3cD1d43d383897D05B4e99": {
+            "name": "WINk",
+            "symbol": "WIN",
+            "price": "0.0006190747739273664419105453395656",
+            "price_BNB": "0.000001264123361532576973638167114057",
+            "decimals": 18
+        },
+        "0xf9CeC8d50f6c8ad3Fb6dcCEC577e05aA32B224FE": {
+            "name": "Chroma",
+            "symbol": "CHR",
+            "price": "0.4352713727803827672512385542866",
+            "price_BNB": "0.000891338004345643432781335722981",
+            "decimals": 6
+        },
+        "0x2222227E22102Fe3322098e4CBfE18cFebD57c95": {
+            "name": "Alien Worlds Trilium",
+            "symbol": "TLM",
+            "price": "0.3314315440454241428155974103165",
+            "price_BNB": "0.000676602162408936935132028474604",
+            "decimals": 4
+        },
+        "0x12BB890508c125661E03b09EC06E404bc9289040": {
+            "name": "Radio Caca V2",
+            "symbol": "RACA",
+            "price": "0.0007980607041479327265978809395626",
+            "price_BNB": "0.0000016296231198691170806465167491",
+            "decimals": 18
+        },
+        "0x477bC8d23c634C154061869478bce96BE6045D12": {
+            "name": "SeedifyFund",
+            "symbol": "SFUND",
+            "price": "3.593097016402732633364104742056",
+            "price_BNB": "0.00733765947151167677502019578966",
+            "decimals": 18
+        },
+        "0xACB8f52DC63BB752a51186D1c55868ADbFfEe9C1": {
+            "name": "BunnyPark",
+            "symbol": "BP",
+            "price": "1.942856617803899107596672138426",
+            "price_BNB": "0.00396720690615379334711456692201",
+            "decimals": 18
+        },
+        "0xCF9f991b14620f5ad144Eec11f9bc7Bf08987622": {
+            "name": "PORNROCKET",
+            "symbol": "PORNROCKET",
+            "price": "0.0000002104453205662726908896645127456",
+            "price_BNB": "0.0000000004297911817929046502035550526825",
+            "decimals": 9
+        },
+        "0x67ee3Cb086F8a16f34beE3ca72FAD36F7Db929e2": {
+            "name": "DODO bird",
+            "symbol": "DODO",
+            "price": "1.941193681492949100646834382457",
+            "price_BNB": "0.003970101526375271693315627270007",
+            "decimals": 18
+        },
+        "0xe5D46cC0Fd592804B36F9dc6D2ed7D4D149EBd6F": {
+            "name": "Sportemon-Go",
+            "symbol": "SGO",
+            "price": "0.00000005847303451835448969222243975476",
+            "price_BNB": "0.0000000001198667893167798067151155879705",
+            "decimals": 9
+        },
+        "0x42F6f551ae042cBe50C739158b4f0CAC0Edb9096": {
+            "name": "Nerve",
+            "symbol": "NRV",
+            "price": "3.019172316178062735732314187994",
+            "price_BNB": "0.00616295793341930735371711833039",
+            "decimals": 18
+        },
+        "0x1162E2EfCE13f99Ed259fFc24d99108aAA0ce935": {
+            "name": "CluCoin",
+            "symbol": "CLU",
+            "price": "0.00000005314245922963012714155535887934",
+            "price_BNB": "0.0000000001086233401578851310322163953673",
+            "decimals": 9
+        },
+        "0xa2B726B1145A4773F68593CF171187d8EBe4d495": {
+            "name": "Injective Protocol",
+            "symbol": "INJ",
+            "price": "11.29621858908281395031956669813",
+            "price_BNB": "0.02306070742805730925683561060939",
+            "decimals": 18
+        },
+        "0x47BEAd2563dCBf3bF2c9407fEa4dC236fAbA485A": {
+            "name": "Swipe",
+            "symbol": "SXP",
+            "price": "3.7986626409517913139137628242",
+            "price_BNB": "0.007754108542383514849411214013623",
+            "decimals": 18
+        },
+        "0x4B0F1812e5Df2A09796481Ff14017e6005508003": {
+            "name": "Trust Wallet",
+            "symbol": "TWT",
+            "price": "0.9233664225756686421224448405326",
+            "price_BNB": "0.001885480612337611164064758760858",
+            "decimals": 18
+        },
+        "0xC9849E6fdB743d08fAeE3E34dd2D1bc69EA11a51": {
+            "name": "Bunny Token",
+            "symbol": "BUNNY",
+            "price": "7.40881495610311611428691828143",
+            "price_BNB": "0.01512987746457569285259620177778",
+            "decimals": 18
+        },
+        "0x8b303d5BbfBbf46F1a4d9741E491e06986894e18": {
+            "name": "Woonkly Power",
+            "symbol": "WOOP",
+            "price": "0.193730062097846456132476727869",
+            "price_BNB": "0.0003956265544676376461808646018722",
+            "decimals": 18
+        },
+        "0x4338665CBB7B2485A8855A139b75D5e34AB0DB94": {
+            "name": "Litecoin Token",
+            "symbol": "LTC",
+            "price": "171.8330390272630553973649323315",
+            "price_BNB": "0.351223098822695221344593151553",
+            "decimals": 18
+        },
+        "0xECa41281c24451168a37211F0bc2b8645AF45092": {
+            "name": "TokenPocket Token",
+            "symbol": "TPT",
+            "price": "0.04495150499995059528686015443703",
+            "price_BNB": "0.0000917882562295401641298211206841",
+            "decimals": 4
+        },
+        "0x587C16b84c64751760f6e3e7e32F896634704352": {
+            "name": "WhaleFall",
+            "symbol": "WHALE",
+            "price": "0.00000003292338174482732819377567567237",
+            "price_BNB": "0.0000000000674912785270424825828705256304",
+            "decimals": 9
+        },
+        "0x08ba0619b1e7A582E0BCe5BBE9843322C954C340": {
+            "name": "Binamon",
+            "symbol": "BMON",
+            "price": "0.5857776807342059902713418073445",
+            "price_BNB": "0.001196249949973497062299869673134",
+            "decimals": 18
+        },
+        "0x5546600f77EdA1DCF2e8817eF4D617382E7f71F5": {
+            "name": "PING",
+            "symbol": "PING",
+            "price": "0.01547741589829199991540787623801",
+            "price_BNB": "0.00003160467692824314170218612170754",
+            "decimals": 9
+        },
+        "0xC7D43F2B51F44f09fBB8a691a0451E8FFCF36c0a": {
+            "name": "EverRise",
+            "symbol": "RISE",
+            "price": "0.0000000405321197021187214721710074731",
+            "price_BNB": "0.0000000000827634928746858756044358423035",
+            "decimals": 9
+        },
+        "0xC0366a104b429f0806BfA98d0008DAA9555b2BEd": {
+            "name": "SafeMars",
+            "symbol": "SMARS",
+            "price": "0.0000000898580065211721338014488003793",
+            "price_BNB": "0.0000000001834851325503158083566088399623",
+            "decimals": 9
+        },
+        "0xBa07EED3d09055d60CAEf2bDfCa1c05792f2dFad": {
+            "name": "MiniDOGE",
+            "symbol": "MiniDOGE",
+            "price": "0.000000032556088122737805411265952286",
+            "price_BNB": "0.00000000006666096286680951612940801864095",
+            "decimals": 9
+        },
+        "0xF21768cCBC73Ea5B6fd3C687208a7c2def2d966e": {
+            "name": "Reef.finance",
+            "symbol": "REEF",
+            "price": "0.02398725459646593416484018647268",
+            "price_BNB": "0.00004894943174048649761638055702965",
+            "decimals": 18
+        },
+        "0x82C19905B036bf4E329740989DCF6aE441AE26c1": {
+            "name": "CP",
+            "symbol": "CP",
+            "price": "2.811667175707458534466768942983",
+            "price_BNB": "0.00574125932646889402560595064733",
+            "decimals": 18
+        },
+        "0xA7f552078dcC247C2684336020c03648500C6d9F": {
+            "name": "Ellipsis",
+            "symbol": "EPS",
+            "price": "0.857546612862595990030378749421",
+            "price_BNB": "0.001751032159157874567514833098568",
+            "decimals": 18
+        },
+        "0x0112e557d400474717056C4e6D40eDD846F38351": {
+            "name": "Phala Network",
+            "symbol": "PHA",
+            "price": "0.845274196521364164717534634328",
+            "price_BNB": "0.001726183840844267415124926388952",
+            "decimals": 18
+        },
+        "0x8519EA49c997f50cefFa444d240fB655e89248Aa": {
+            "name": "RAMP DEFI",
+            "symbol": "RAMP",
+            "price": "0.3047124698164197735808467346525",
+            "price_BNB": "0.000622746132673458230523873470213",
+            "decimals": 18
+        },
+        "0x56231D55391bd6382bc2a0761a644ea188B007cc": {
+            "name": "Sagittarius",
+            "symbol": "SGRv2",
+            "price": "0.1118755013392997136371385478912",
+            "price_BNB": "0.0002293379411767193140744175476917",
+            "decimals": 18
+        },
+        "0x43C37e8240d0fCCEF747d12e201Bf295e4226388": {
+            "name": "Liquidity Staked BNB",
+            "symbol": "LBNB",
+            "price": "528.724149785147124496987608731",
+            "price_BNB": "1.077344050506410279363495377789",
+            "decimals": 18
+        },
+        "0xAD6cAEb32CD2c308980a548bD0Bc5AA4306c6c18": {
+            "name": "Band Protocol Token",
+            "symbol": "BAND",
+            "price": "8.91727261626517870147661959574",
+            "price_BNB": "0.01839873542142971156119675354932",
+            "decimals": 18
+        },
+        "0x4206931337dc273a630d328dA6441786BfaD668f": {
+            "name": "Dogecoin",
+            "symbol": "DOGE",
+            "price": "0.2790007537747452581136879246205",
+            "price_BNB": "0.0005697646832065031739315123809054",
+            "decimals": 8
+        },
+        "0x03fF0ff224f904be3118461335064bB48Df47938": {
+            "name": "Harmony ONE",
+            "symbol": "ONE",
+            "price": "0.1028314849978433077508323125172",
+            "price_BNB": "0.0002100118193839654601092694733304",
+            "decimals": 18
+        },
+        "0xE90444C38a8Cd2DCEEe9D954042ac817a794E9A9": {
+            "name": "Synthetic BNB",
+            "symbol": "SBNB",
+            "price": "486.0906703187857505880539573822",
+            "price_BNB": "0.999377472100666737615124071292",
+            "decimals": 18
+        },
+        "0x9678E42ceBEb63F23197D726B29b1CB20d0064E5": {
+            "name": "IoTeX Network",
+            "symbol": "IOTX",
+            "price": "0.0724760598954839925040880417734",
+            "price_BNB": "0.000148102716045418083694724251277",
+            "decimals": 18
+        },
+        "0x4691937a7508860F876c9c0a2a617E7d9E945D4B": {
+            "name": "Wootrade Network",
+            "symbol": "WOO",
+            "price": "0.583387134985050826345377263257",
+            "price_BNB": "0.00119587259552178815138524135705",
+            "decimals": 18
+        },
+        "0x20de22029ab63cf9A7Cf5fEB2b737Ca1eE4c82A6": {
+            "name": "Chess",
+            "symbol": "CHESS",
+            "price": "4.43339754136354855831368895168",
+            "price_BNB": "0.0090527298139303240448979833248",
+            "decimals": 18
+        },
+        "0xb86AbCb37C3A4B64f74f59301AFF131a1BEcC787": {
+            "name": "Zilliqa",
+            "symbol": "ZIL",
+            "price": "0.1118180154104424310412562292822",
+            "price_BNB": "0.0002292042667482565895426472373886",
+            "decimals": 12
+        },
+        "0x154A9F9cbd3449AD22FDaE23044319D6eF2a1Fab": {
+            "name": "CryptoBlades Skill Token",
+            "symbol": "SKILL",
+            "price": "47.72449016679098114228316233805",
+            "price_BNB": "0.0974527837628166158654241635602",
+            "decimals": 18
+        },
+        "0x78650B139471520656b9E7aA7A5e9276814a38e9": {
+            "name": "StandardBTCHashrateToken",
+            "symbol": "BTCST",
+            "price": "23.40301887721305067211600140579",
+            "price_BNB": "0.0479740044705241178564966389628",
+            "decimals": 17
+        },
+        "0x1633b7157e7638C4d6593436111Bf125Ee74703F": {
+            "name": "Splintershards",
+            "symbol": "SPS",
+            "price": "0.503386034487170304549643016269",
+            "price_BNB": "0.00102799327864092691379265414577",
+            "decimals": 18
+        },
+        "0xE283D0e3B8c102BAdF5E8166B73E02D96d92F688": {
+            "name": "Elephant Money",
+            "symbol": "ELEPHANT",
+            "price": "0.00000001293230638050486719856475561694",
+            "price_BNB": "0.00000000002665632626678411623429232163366",
+            "decimals": 9
+        },
+        "0x2eD9a5C8C13b93955103B9a7C167B67Ef4d568a3": {
+            "name": "Mask Network",
+            "symbol": "MASK",
+            "price": "16.36651423346787842368389082264",
+            "price_BNB": "0.03342229469850899519769944843355",
+            "decimals": 18
+        },
+        "0x02fF5065692783374947393723dbA9599e59F591": {
+            "name": "YOOSHI",
+            "symbol": "YOOSHI",
+            "price": "0.0000001626256274526925371844286119671",
+            "price_BNB": "0.000000000332311231149264773780878440846",
+            "decimals": 9
+        },
+        "0xA2120b9e674d3fC3875f415A7DF52e382F141225": {
+            "name": "Automata",
+            "symbol": "ATA",
+            "price": "1.519116153661779329540141722516",
+            "price_BNB": "0.003102275885870110125383217560784",
+            "decimals": 18
+        },
+        "0xDB021b1B247fe2F1fa57e0A87C748Cc1E321F07F": {
+            "name": "AMPL secured by Meter Passport",
+            "symbol": "AMPL",
+            "price": "0.917134500754098406110703175744",
+            "price_BNB": "0.001883266234230742768756282446854",
+            "decimals": 9
+        },
+        "0x545f90dC35CA1e6129f1fEd354b3e2DF12034261": {
+            "name": "NEWB",
+            "symbol": "NEWB",
+            "price": "248.8027316148210785511795209617",
+            "price_BNB": "0.508040941947552890991398130523",
+            "decimals": 18
+        },
+        "0x4FA7163E153419E0E1064e418dd7A99314Ed27b6": {
+            "name": "Hot Cross Token",
+            "symbol": "HOTCROSS",
+            "price": "0.2277559264937001246816869615192",
+            "price_BNB": "0.0004650629019939824305615360947995",
+            "decimals": 18
+        },
+        "0x833F307aC507D47309fD8CDD1F835BeF8D702a93": {
+            "name": "REVV",
+            "symbol": "REVV",
+            "price": "0.274902895050704524665179152008",
+            "price_BNB": "0.000561343871067097442954248565115",
+            "decimals": 18
+        },
+        "0x67d66e8Ec1Fd25d98B3Ccd3B19B7dc4b4b7fC493": {
+            "name": "Feeder.finance",
+            "symbol": "FEED",
+            "price": "0.2849234017692895133356742503963",
+            "price_BNB": "0.000581705754846583004916851784324",
+            "decimals": 18
+        },
+        "0x762539b45A1dCcE3D36d080F74d1AED37844b878": {
+            "name": "Linear Token",
+            "symbol": "LINA",
+            "price": "0.0568624132175273443024781547874",
+            "price_BNB": "0.0001161097099369573046093158698569",
+            "decimals": 18
+        }
+    },
+    "pairs": {
+        "PancakeSwap_BakerySwap": [
+            [
+                "WBNB",
+                "BUSD"
+            ],
+            [
+                "USDT",
+                "BUSD"
+            ],
+            [
+                "USDC",
+                "BUSD"
+            ],
+            [
+                "WBNB",
+                "USDT"
+            ],
+            [
+                "BTCB",
+                "WBNB"
+            ],
+            [
+                "SFUND",
+                "WBNB"
+            ],
+            [
+                "ETH",
+                "WBNB"
+            ],
+            [
+                "TLM",
+                "WBNB"
+            ],
+            [
+                "TKO",
+                "WBNB"
+            ]
+        ]
     }
-  },
-  "all_tokens": {
-    "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82": {
-      "name": "PancakeSwap Token",
-      "symbol": "Cake",
-      "price": "25.48269615170430535596301706226",
-      "price_BNB": "0.05203970321020509891202821427723",
-      "decimals": 18
-    },
-    "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c": {
-      "name": "Wrapped BNB",
-      "symbol": "WBNB",
-      "price": "489.7010124043727157072240298755",
-      "price_BNB": "1",
-      "decimals": 18
-    },
-    "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56": {
-      "name": "BUSD Token",
-      "symbol": "BUSD",
-      "price": "0.9998961048074054912628652547975",
-      "price_BNB": "0.002041948787821568254024535443",
-      "decimals": 18
-    },
-    "0x55d398326f99059fF775485246999027B3197955": {
-      "name": "Tether USD",
-      "symbol": "USDT",
-      "price": "1.00021982422661287853260789493",
-      "price_BNB": "0.002042610722648613796711426472856",
-      "decimals": 18
-    },
-    "0x2170Ed0880ac9A755fd29B2688956BD959F933F8": {
-      "name": "Ethereum Token",
-      "symbol": "ETH",
-      "price": "3118.10437567429973980182023241",
-      "price_BNB": "6.367280920920049866378771230776",
-      "decimals": 18
-    },
-    "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d": {
-      "name": "USD Coin",
-      "symbol": "USDC",
-      "price": "1.001201041714053944421177279575",
-      "price_BNB": "0.002044514951680981784668876196187",
-      "decimals": 18
-    },
-    "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c": {
-      "name": "BTCB Token",
-      "symbol": "BTCB",
-      "price": "47195.57275624724834213088597285",
-      "price_BNB": "96.3748542007522362578187238359",
-      "decimals": 18
-    },
-    "0x14016E85a25aeb13065688cAFB43044C2ef86784": {
-      "name": "TrueUSD",
-      "symbol": "TUSD",
-      "price": "1.00003302858158035203922274655",
-      "price_BNB": "0.002047273453530975294420563777924",
-      "decimals": 18
-    },
-    "0x3203c9E46cA618C8C1cE5dC67e7e9D75f5da2377": {
-      "name": "Mobox",
-      "symbol": "MBOX",
-      "price": "8.04236848370853728990657600462",
-      "price_BNB": "0.0164237785301862825790597481447",
-      "decimals": 18
-    },
-    "0x7083609fCE4d1d8Dc0C979AAb8c869Ea2C873402": {
-      "name": "Polkadot Token",
-      "symbol": "DOT",
-      "price": "24.79312314466752934934133049435",
-      "price_BNB": "0.05062844630880071833174926949803",
-      "decimals": 18
-    },
-    "0x8076C74C5e3F5852037F31Ff0093Eeb8c8ADd8D3": {
-      "name": "SafeMoon",
-      "symbol": "SAFEMOON",
-      "price": "0.00000237836978491037598320818802535",
-      "price_BNB": "0.00000000485659938215323835767778664216",
-      "decimals": 9
-    },
-    "0xE0e514c71282b6f4e823703a39374Cf58dc3eA4f": {
-      "name": "BELT Token",
-      "symbol": "BELT",
-      "price": "14.91747790883450396859249228074",
-      "price_BNB": "0.03057421453401559238195779146908",
-      "decimals": 18
-    },
-    "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3": {
-      "name": "Dai Token",
-      "symbol": "DAI",
-      "price": "1.004886605195122238319231375482",
-      "price_BNB": "0.002051534012916824036373293268486",
-      "decimals": 18
-    },
-    "0x8F0528cE5eF7B51152A59745bEfDD91D97091d2F": {
-      "name": "AlpacaToken",
-      "symbol": "ALPACA",
-      "price": "1.244204562259562438669770836442",
-      "price_BNB": "0.002540570349710136364992503845792",
-      "decimals": 18
-    },
-    "0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD": {
-      "name": "ChainLink Token",
-      "symbol": "LINK",
-      "price": "25.35785057605373114970544324665",
-      "price_BNB": "0.0517690883770451959814684272724",
-      "decimals": 18
-    },
-    "0xD40bEDb44C081D2935eebA6eF5a3c8A31A1bBE13": {
-      "name": "Metahero",
-      "symbol": "HERO",
-      "price": "0.0315380389921558099158187622893",
-      "price_BNB": "0.0000644055461946222112147259559083",
-      "decimals": 18
-    },
-    "0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47": {
-      "name": "Cardano Token",
-      "symbol": "ADA",
-      "price": "2.593449261715282572594843809233",
-      "price_BNB": "0.00529623038163076748748839315678",
-      "decimals": 18
-    },
-    "0x1D2F0da169ceB9fC7B3144628dB156f3F6c60dBE": {
-      "name": "XRP Token",
-      "symbol": "XRP",
-      "price": "1.123455045263306540520136426903",
-      "price_BNB": "0.00229426551147671792883563253946",
-      "decimals": 18
-    },
-    "0xc748673057861a797275CD8A068AbB95A902e8de": {
-      "name": "Baby Doge Coin",
-      "symbol": "BabyDoge",
-      "price": "0.000000001055559828082333522935806229945",
-      "price_BNB": "0.000000000002155372552739456758237984639525",
-      "decimals": 9
-    },
-    "0x715D400F88C167884bbCc41C5FeA407ed4D2f8A0": {
-      "name": "Axie Infinity Shard",
-      "symbol": "AXS",
-      "price": "69.8206636985557268433473972051",
-      "price_BNB": "0.1425231050748139547816778918281",
-      "decimals": 18
-    },
-    "0x23396cF899Ca06c4472205fC903bDB4de249D6fC": {
-      "name": "Wrapped UST Token",
-      "symbol": "UST",
-      "price": "1.003747186255602926645231382833",
-      "price_BNB": "0.00204988095104079113673742956892",
-      "decimals": 18
-    },
-    "0xBf5140A22578168FD562DCcF235E5D43A02ce9B1": {
-      "name": "Uniswap",
-      "symbol": "UNI",
-      "price": "26.14060005276984107542047376847",
-      "price_BNB": "0.05337875551640466531816209341086",
-      "decimals": 18
-    },
-    "0x8595F9dA7b868b1822194fAEd312235E43007b49": {
-      "name": "BitTorrent",
-      "symbol": "BTT",
-      "price": "0.00413066111713761517929612591683",
-      "price_BNB": "0.00000843464416649393180796567819921",
-      "decimals": 18
-    },
-    "0xcF6BB5389c92Bdda8a3747Ddb454cB7a64626C63": {
-      "name": "Venus",
-      "symbol": "XVS",
-      "price": "33.25232231617854093910389727463",
-      "price_BNB": "0.0679107400364589640747361415814",
-      "decimals": 18
-    },
-    "0x07663837218A003e66310a01596af4bf4e44623D": {
-      "name": "rUSD",
-      "symbol": "rUSD",
-      "price": "0.996404253056177620400846958538",
-      "price_BNB": "0.002055051092381432217521578312282",
-      "decimals": 18
-    },
-    "0x85EAC5Ac2F758618dFa09bDbe0cf174e7d574D5B": {
-      "name": "TRON",
-      "symbol": "TRX",
-      "price": "0.0850173829126130263546139056736",
-      "price_BNB": "0.0001735995753788443408670173065671",
-      "decimals": 18
-    },
-    "0x17B7163cf1Dbd286E262ddc68b553D899B93f526": {
-      "name": "Qubit Token",
-      "symbol": "QBT",
-      "price": "0.527232979833253648948848092184",
-      "price_BNB": "0.00107658845180201450000923337074",
-      "decimals": 18
-    },
-    "0xaEC945e04baF28b135Fa7c640f624f8D90F1C3a6": {
-      "name": "Coin98",
-      "symbol": "C98",
-      "price": "5.04451094075125365645814536254",
-      "price_BNB": "0.01030120586433610855196143877051",
-      "decimals": 18
-    },
-    "0xbA2aE424d960c26247Dd6c32edC70B295c744C43": {
-      "name": "Dogecoin",
-      "symbol": "DOGE",
-      "price": "0.2774937947500735909850321568102",
-      "price_BNB": "0.0005666858758969225837898918624494",
-      "decimals": 8
-    },
-    "0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7": {
-      "name": "VAI Stablecoin",
-      "symbol": "VAI",
-      "price": "0.798910465574371257134934590645",
-      "price_BNB": "0.001630967150420885078911815694425",
-      "decimals": 18
-    },
-    "0xD41FDb03Ba84762dD66a0af1a6C8540FF1ba5dfb": {
-      "name": "SafePal Token",
-      "symbol": "SFP",
-      "price": "1.638373066145809909913522911212",
-      "price_BNB": "0.003345408732876748414712527167895",
-      "decimals": 18
-    },
-    "0xa1faa113cbE53436Df28FF0aEe54275c13B40975": {
-      "name": "AlphaToken",
-      "symbol": "ALPHA",
-      "price": "1.113433722163201034427069345503",
-      "price_BNB": "0.00228234657985836282888507150996",
-      "decimals": 18
-    },
-    "0x565b72163f17849832A692A3c5928cc502f46D69": {
-      "name": "Hunny Token",
-      "symbol": "HUNNY",
-      "price": "1.162207352759629601139976640275",
-      "price_BNB": "0.002373213495168759311308632841857",
-      "decimals": 18
-    },
-    "0x31471E0791fCdbE82fbF4C44943255e923F1b794": {
-      "name": "Plant vs Undead Token",
-      "symbol": "PVU",
-      "price": "24.0432632026460100421760338931",
-      "price_BNB": "0.04910021342804847574691260239885",
-      "decimals": 18
-    },
-    "0x9f589e3eabe42ebC94A44727b3f3531C0c877809": {
-      "name": "Tokocrypto Token",
-      "symbol": "TKO",
-      "price": "2.893325466606779396716018021566",
-      "price_BNB": "0.00590794963104631493461300786592",
-      "decimals": 18
-    },
-    "0xc212D39E35F22F259457bE79Fc2D822FA7122e6e": {
-      "name": "CBET",
-      "symbol": "CBET",
-      "price": "0.0000003434411939569436251042849056817",
-      "price_BNB": "0.000000000708990448852754192192452316974",
-      "decimals": 9
-    },
-    "0x8443f091997f06a61670B735ED92734F5628692F": {
-      "name": "Bella Protocol",
-      "symbol": "BEL",
-      "price": "2.559543402595254016165204162257",
-      "price_BNB": "0.00524661123062309649337235905982",
-      "decimals": 18
-    },
-    "0xA2a26349448ddAfAe34949a6Cc2cEcF78c0497aC": {
-      "name": "TrusterCoin",
-      "symbol": "TSC",
-      "price": "0.0753930106594846095740726778448",
-      "price_BNB": "0.000153964051470937190968387406773",
-      "decimals": 9
-    },
-    "0x947950BcC74888a40Ffa2593C5798F11Fc9124C4": {
-      "name": "SushiToken",
-      "symbol": "SUSHI",
-      "price": "11.65671376455319914228546238655",
-      "price_BNB": "0.02379716039810490367543269670732",
-      "decimals": 18
-    },
-    "0xAC51066d7bEC65Dc4589368da368b212745d63E8": {
-      "name": "ALICE",
-      "symbol": "ALICE",
-      "price": "19.69759813373210082089743791544",
-      "price_BNB": "0.0402506177336568891021645592799",
-      "decimals": 6
-    },
-    "0xaeF0d72a118ce24feE3cD1d43d383897D05B4e99": {
-      "name": "WINk",
-      "symbol": "WIN",
-      "price": "0.0006190747739273664419105453395656",
-      "price_BNB": "0.000001264123361532576973638167114057",
-      "decimals": 18
-    },
-    "0xf9CeC8d50f6c8ad3Fb6dcCEC577e05aA32B224FE": {
-      "name": "Chroma",
-      "symbol": "CHR",
-      "price": "0.4352713727803827672512385542866",
-      "price_BNB": "0.000891338004345643432781335722981",
-      "decimals": 6
-    },
-    "0x2222227E22102Fe3322098e4CBfE18cFebD57c95": {
-      "name": "Alien Worlds Trilium",
-      "symbol": "TLM",
-      "price": "0.3314315440454241428155974103165",
-      "price_BNB": "0.000676602162408936935132028474604",
-      "decimals": 4
-    },
-    "0x12BB890508c125661E03b09EC06E404bc9289040": {
-      "name": "Radio Caca V2",
-      "symbol": "RACA",
-      "price": "0.0007980607041479327265978809395626",
-      "price_BNB": "0.0000016296231198691170806465167491",
-      "decimals": 18
-    },
-    "0x477bC8d23c634C154061869478bce96BE6045D12": {
-      "name": "SeedifyFund",
-      "symbol": "SFUND",
-      "price": "3.593097016402732633364104742056",
-      "price_BNB": "0.00733765947151167677502019578966",
-      "decimals": 18
-    },
-    "0xACB8f52DC63BB752a51186D1c55868ADbFfEe9C1": {
-      "name": "BunnyPark",
-      "symbol": "BP",
-      "price": "1.942856617803899107596672138426",
-      "price_BNB": "0.00396720690615379334711456692201",
-      "decimals": 18
-    },
-    "0xCF9f991b14620f5ad144Eec11f9bc7Bf08987622": {
-      "name": "PORNROCKET",
-      "symbol": "PORNROCKET",
-      "price": "0.0000002104453205662726908896645127456",
-      "price_BNB": "0.0000000004297911817929046502035550526825",
-      "decimals": 9
-    },
-    "0x67ee3Cb086F8a16f34beE3ca72FAD36F7Db929e2": {
-      "name": "DODO bird",
-      "symbol": "DODO",
-      "price": "1.941193681492949100646834382457",
-      "price_BNB": "0.003970101526375271693315627270007",
-      "decimals": 18
-    },
-    "0xe5D46cC0Fd592804B36F9dc6D2ed7D4D149EBd6F": {
-      "name": "Sportemon-Go",
-      "symbol": "SGO",
-      "price": "0.00000005847303451835448969222243975476",
-      "price_BNB": "0.0000000001198667893167798067151155879705",
-      "decimals": 9
-    },
-    "0x42F6f551ae042cBe50C739158b4f0CAC0Edb9096": {
-      "name": "Nerve",
-      "symbol": "NRV",
-      "price": "3.019172316178062735732314187994",
-      "price_BNB": "0.00616295793341930735371711833039",
-      "decimals": 18
-    },
-    "0x1162E2EfCE13f99Ed259fFc24d99108aAA0ce935": {
-      "name": "CluCoin",
-      "symbol": "CLU",
-      "price": "0.00000005314245922963012714155535887934",
-      "price_BNB": "0.0000000001086233401578851310322163953673",
-      "decimals": 9
-    },
-    "0xa2B726B1145A4773F68593CF171187d8EBe4d495": {
-      "name": "Injective Protocol",
-      "symbol": "INJ",
-      "price": "11.29621858908281395031956669813",
-      "price_BNB": "0.02306070742805730925683561060939",
-      "decimals": 18
-    },
-    "0x47BEAd2563dCBf3bF2c9407fEa4dC236fAbA485A": {
-      "name": "Swipe",
-      "symbol": "SXP",
-      "price": "3.7986626409517913139137628242",
-      "price_BNB": "0.007754108542383514849411214013623",
-      "decimals": 18
-    },
-    "0x4B0F1812e5Df2A09796481Ff14017e6005508003": {
-      "name": "Trust Wallet",
-      "symbol": "TWT",
-      "price": "0.9233664225756686421224448405326",
-      "price_BNB": "0.001885480612337611164064758760858",
-      "decimals": 18
-    },
-    "0xC9849E6fdB743d08fAeE3E34dd2D1bc69EA11a51": {
-      "name": "Bunny Token",
-      "symbol": "BUNNY",
-      "price": "7.40881495610311611428691828143",
-      "price_BNB": "0.01512987746457569285259620177778",
-      "decimals": 18
-    },
-    "0x8b303d5BbfBbf46F1a4d9741E491e06986894e18": {
-      "name": "Woonkly Power",
-      "symbol": "WOOP",
-      "price": "0.193730062097846456132476727869",
-      "price_BNB": "0.0003956265544676376461808646018722",
-      "decimals": 18
-    },
-    "0x4338665CBB7B2485A8855A139b75D5e34AB0DB94": {
-      "name": "Litecoin Token",
-      "symbol": "LTC",
-      "price": "171.8330390272630553973649323315",
-      "price_BNB": "0.351223098822695221344593151553",
-      "decimals": 18
-    },
-    "0xECa41281c24451168a37211F0bc2b8645AF45092": {
-      "name": "TokenPocket Token",
-      "symbol": "TPT",
-      "price": "0.04495150499995059528686015443703",
-      "price_BNB": "0.0000917882562295401641298211206841",
-      "decimals": 4
-    },
-    "0x587C16b84c64751760f6e3e7e32F896634704352": {
-      "name": "WhaleFall",
-      "symbol": "WHALE",
-      "price": "0.00000003292338174482732819377567567237",
-      "price_BNB": "0.0000000000674912785270424825828705256304",
-      "decimals": 9
-    },
-    "0x08ba0619b1e7A582E0BCe5BBE9843322C954C340": {
-      "name": "Binamon",
-      "symbol": "BMON",
-      "price": "0.5857776807342059902713418073445",
-      "price_BNB": "0.001196249949973497062299869673134",
-      "decimals": 18
-    },
-    "0x5546600f77EdA1DCF2e8817eF4D617382E7f71F5": {
-      "name": "PING",
-      "symbol": "PING",
-      "price": "0.01547741589829199991540787623801",
-      "price_BNB": "0.00003160467692824314170218612170754",
-      "decimals": 9
-    },
-    "0xC7D43F2B51F44f09fBB8a691a0451E8FFCF36c0a": {
-      "name": "EverRise",
-      "symbol": "RISE",
-      "price": "0.0000000405321197021187214721710074731",
-      "price_BNB": "0.0000000000827634928746858756044358423035",
-      "decimals": 9
-    },
-    "0xC0366a104b429f0806BfA98d0008DAA9555b2BEd": {
-      "name": "SafeMars",
-      "symbol": "SMARS",
-      "price": "0.0000000898580065211721338014488003793",
-      "price_BNB": "0.0000000001834851325503158083566088399623",
-      "decimals": 9
-    },
-    "0xBa07EED3d09055d60CAEf2bDfCa1c05792f2dFad": {
-      "name": "MiniDOGE",
-      "symbol": "MiniDOGE",
-      "price": "0.000000032556088122737805411265952286",
-      "price_BNB": "0.00000000006666096286680951612940801864095",
-      "decimals": 9
-    },
-    "0xF21768cCBC73Ea5B6fd3C687208a7c2def2d966e": {
-      "name": "Reef.finance",
-      "symbol": "REEF",
-      "price": "0.02398725459646593416484018647268",
-      "price_BNB": "0.00004894943174048649761638055702965",
-      "decimals": 18
-    },
-    "0x82C19905B036bf4E329740989DCF6aE441AE26c1": {
-      "name": "CP",
-      "symbol": "CP",
-      "price": "2.811667175707458534466768942983",
-      "price_BNB": "0.00574125932646889402560595064733",
-      "decimals": 18
-    },
-    "0xA7f552078dcC247C2684336020c03648500C6d9F": {
-      "name": "Ellipsis",
-      "symbol": "EPS",
-      "price": "0.857546612862595990030378749421",
-      "price_BNB": "0.001751032159157874567514833098568",
-      "decimals": 18
-    },
-    "0x0112e557d400474717056C4e6D40eDD846F38351": {
-      "name": "Phala Network",
-      "symbol": "PHA",
-      "price": "0.845274196521364164717534634328",
-      "price_BNB": "0.001726183840844267415124926388952",
-      "decimals": 18
-    },
-    "0x8519EA49c997f50cefFa444d240fB655e89248Aa": {
-      "name": "RAMP DEFI",
-      "symbol": "RAMP",
-      "price": "0.3047124698164197735808467346525",
-      "price_BNB": "0.000622746132673458230523873470213",
-      "decimals": 18
-    },
-    "0x56231D55391bd6382bc2a0761a644ea188B007cc": {
-      "name": "Sagittarius",
-      "symbol": "SGRv2",
-      "price": "0.1118755013392997136371385478912",
-      "price_BNB": "0.0002293379411767193140744175476917",
-      "decimals": 18
-    },
-    "0x43C37e8240d0fCCEF747d12e201Bf295e4226388": {
-      "name": "Liquidity Staked BNB",
-      "symbol": "LBNB",
-      "price": "528.724149785147124496987608731",
-      "price_BNB": "1.077344050506410279363495377789",
-      "decimals": 18
-    },
-    "0xAD6cAEb32CD2c308980a548bD0Bc5AA4306c6c18": {
-      "name": "Band Protocol Token",
-      "symbol": "BAND",
-      "price": "8.91727261626517870147661959574",
-      "price_BNB": "0.01839873542142971156119675354932",
-      "decimals": 18
-    },
-    "0x4206931337dc273a630d328dA6441786BfaD668f": {
-      "name": "Dogecoin",
-      "symbol": "DOGE",
-      "price": "0.2790007537747452581136879246205",
-      "price_BNB": "0.0005697646832065031739315123809054",
-      "decimals": 8
-    },
-    "0x03fF0ff224f904be3118461335064bB48Df47938": {
-      "name": "Harmony ONE",
-      "symbol": "ONE",
-      "price": "0.1028314849978433077508323125172",
-      "price_BNB": "0.0002100118193839654601092694733304",
-      "decimals": 18
-    },
-    "0xE90444C38a8Cd2DCEEe9D954042ac817a794E9A9": {
-      "name": "Synthetic BNB",
-      "symbol": "SBNB",
-      "price": "486.0906703187857505880539573822",
-      "price_BNB": "0.999377472100666737615124071292",
-      "decimals": 18
-    },
-    "0x9678E42ceBEb63F23197D726B29b1CB20d0064E5": {
-      "name": "IoTeX Network",
-      "symbol": "IOTX",
-      "price": "0.0724760598954839925040880417734",
-      "price_BNB": "0.000148102716045418083694724251277",
-      "decimals": 18
-    },
-    "0x4691937a7508860F876c9c0a2a617E7d9E945D4B": {
-      "name": "Wootrade Network",
-      "symbol": "WOO",
-      "price": "0.583387134985050826345377263257",
-      "price_BNB": "0.00119587259552178815138524135705",
-      "decimals": 18
-    },
-    "0x20de22029ab63cf9A7Cf5fEB2b737Ca1eE4c82A6": {
-      "name": "Chess",
-      "symbol": "CHESS",
-      "price": "4.43339754136354855831368895168",
-      "price_BNB": "0.0090527298139303240448979833248",
-      "decimals": 18
-    },
-    "0xb86AbCb37C3A4B64f74f59301AFF131a1BEcC787": {
-      "name": "Zilliqa",
-      "symbol": "ZIL",
-      "price": "0.1118180154104424310412562292822",
-      "price_BNB": "0.0002292042667482565895426472373886",
-      "decimals": 12
-    },
-    "0x154A9F9cbd3449AD22FDaE23044319D6eF2a1Fab": {
-      "name": "CryptoBlades Skill Token",
-      "symbol": "SKILL",
-      "price": "47.72449016679098114228316233805",
-      "price_BNB": "0.0974527837628166158654241635602",
-      "decimals": 18
-    },
-    "0x78650B139471520656b9E7aA7A5e9276814a38e9": {
-      "name": "StandardBTCHashrateToken",
-      "symbol": "BTCST",
-      "price": "23.40301887721305067211600140579",
-      "price_BNB": "0.0479740044705241178564966389628",
-      "decimals": 17
-    },
-    "0x1633b7157e7638C4d6593436111Bf125Ee74703F": {
-      "name": "Splintershards",
-      "symbol": "SPS",
-      "price": "0.503386034487170304549643016269",
-      "price_BNB": "0.00102799327864092691379265414577",
-      "decimals": 18
-    },
-    "0xE283D0e3B8c102BAdF5E8166B73E02D96d92F688": {
-      "name": "Elephant Money",
-      "symbol": "ELEPHANT",
-      "price": "0.00000001293230638050486719856475561694",
-      "price_BNB": "0.00000000002665632626678411623429232163366",
-      "decimals": 9
-    },
-    "0x2eD9a5C8C13b93955103B9a7C167B67Ef4d568a3": {
-      "name": "Mask Network",
-      "symbol": "MASK",
-      "price": "16.36651423346787842368389082264",
-      "price_BNB": "0.03342229469850899519769944843355",
-      "decimals": 18
-    },
-    "0x02fF5065692783374947393723dbA9599e59F591": {
-      "name": "YOOSHI",
-      "symbol": "YOOSHI",
-      "price": "0.0000001626256274526925371844286119671",
-      "price_BNB": "0.000000000332311231149264773780878440846",
-      "decimals": 9
-    },
-    "0xA2120b9e674d3fC3875f415A7DF52e382F141225": {
-      "name": "Automata",
-      "symbol": "ATA",
-      "price": "1.519116153661779329540141722516",
-      "price_BNB": "0.003102275885870110125383217560784",
-      "decimals": 18
-    },
-    "0xDB021b1B247fe2F1fa57e0A87C748Cc1E321F07F": {
-      "name": "AMPL secured by Meter Passport",
-      "symbol": "AMPL",
-      "price": "0.917134500754098406110703175744",
-      "price_BNB": "0.001883266234230742768756282446854",
-      "decimals": 9
-    },
-    "0x545f90dC35CA1e6129f1fEd354b3e2DF12034261": {
-      "name": "NEWB",
-      "symbol": "NEWB",
-      "price": "248.8027316148210785511795209617",
-      "price_BNB": "0.508040941947552890991398130523",
-      "decimals": 18
-    },
-    "0x4FA7163E153419E0E1064e418dd7A99314Ed27b6": {
-      "name": "Hot Cross Token",
-      "symbol": "HOTCROSS",
-      "price": "0.2277559264937001246816869615192",
-      "price_BNB": "0.0004650629019939824305615360947995",
-      "decimals": 18
-    },
-    "0x833F307aC507D47309fD8CDD1F835BeF8D702a93": {
-      "name": "REVV",
-      "symbol": "REVV",
-      "price": "0.274902895050704524665179152008",
-      "price_BNB": "0.000561343871067097442954248565115",
-      "decimals": 18
-    },
-    "0x67d66e8Ec1Fd25d98B3Ccd3B19B7dc4b4b7fC493": {
-      "name": "Feeder.finance",
-      "symbol": "FEED",
-      "price": "0.2849234017692895133356742503963",
-      "price_BNB": "0.000581705754846583004916851784324",
-      "decimals": 18
-    },
-    "0x762539b45A1dCcE3D36d080F74d1AED37844b878": {
-      "name": "Linear Token",
-      "symbol": "LINA",
-      "price": "0.0568624132175273443024781547874",
-      "price_BNB": "0.0001161097099369573046093158698569",
-      "decimals": 18
-    }
-  }
 }

@@ -35,9 +35,12 @@ def get_decimals_from_contract(address, symbol):
 
 def get_decimals_from_api(address, symbol):
     resp = requests.post(
-        url='https://eu.bsc.chaingateway.io/v1/getToken?apikey=f8fb08bdf2512083bd750a34528ff93b93884e94',
-        headers={'Content-Type': 'application/json'},
-        data=json.dumps({'contractaddress': f'{address}', 'apikey': 'f8fb08bdf2512083bd750a34528ff93b93884e94'})).json()
+        url='https://eu.bsc.chaingateway.io/v1/getToken?apikey=f8fb08bdf2512083bd750a34528ff93b93884e94', headers={
+            'Content-Type': 'application/json'
+        }, data=json.dumps({
+            'contractaddress': f'{address}',
+            'apikey': 'f8fb08bdf2512083bd750a34528ff93b93884e94'
+        })).json()
 
     decimals = int(resp['decimals'])
 
@@ -62,21 +65,42 @@ def get_address_by_symbol(symbol):
     raise ValueError('Not Found')
 
 
-def get_pancake_liquidity(pair):
-    """
-    Querries the PancakeSwap factory smartcontract for the specified token's liquidity size.
-    This can be used to guess a good amount to loan or trade
-    :param pair:
-    :return:
-    """
-    pass
+def get_decimals(address):
+    io = open('../resources/data.json')
+    tokens = json.loads(io.read())['all_tokens']
+    io.close()
 
-
-def get_bakery_liquidity(pair):
-    pass
+    for key in tokens:
+        if key == address:
+            return tokens[key]['decimals']
 
 
 def get_abi(address):
     return requests.get('https://api.bscscan.com/api?module=contract&action=getabi'
                         f'&address={address}&apikey=QR4DM459W4XUCSN7WMWGR6RU23YNS81NWC'
                         '').json()['result']
+
+
+def get_pool_by_pair(pair, dex):
+    pools = data['dex'][dex]['liquidityPools'].keys()
+
+    candidate1 = f'{pair[0]}_{pair[1]}'
+    candidate2 = f'{pair[1]}_{pair[0]}'
+
+    for pool in pools:
+        if pool == candidate1 or pool == candidate2:
+            return data['dex'][dex]['liquidityPools'][pool]['pool']
+
+
+def get_pair_by_pool(dex, pool):
+    """
+    Returns the XXX_YYY pair of token symbols for the specified pool
+    :param dex:
+    :param pool:
+    :return:
+    """
+    pools = data['dex'][dex]['liquidityPools'].keys()
+
+    for pair in pools:
+        if data['dex'][dex]['liquidityPools'][pair]['pool'] == pool:
+            return pair

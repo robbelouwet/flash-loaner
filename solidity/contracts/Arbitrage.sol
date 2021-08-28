@@ -13,13 +13,16 @@ vb: startArbitrage(WETH, DAI, 1M, 0) -> leent 1000000 WETH, en pancakeCall word 
 pancakeCall(WETH_DAI_PAIR, 1M, 0) -> wordt aangeroepen
 */
 contract Arbitrage {
+  address owner;
+
   address public pancakeFactory;
   uint constant deadline = 10 days;
   IUniswapV2Router02 public bakeryRouter;
 
-  constructor(address _pancakeFactory, address _bakeryRouter) public {
+  constructor(address _pancakeFactory, address _bakeryRouter, address _owner) public {
     pancakeFactory = _pancakeFactory;  
     bakeryRouter = IUniswapV2Router02(_bakeryRouter);
+    owner = _owner;
   }
 
   // Start de arbitrage, een call naar .swap met 0 als 1 van de hoeveelheden (en 'not empty') triggert
@@ -38,6 +41,10 @@ contract Arbitrage {
       address(this), 
       bytes('not empty')
     );
+  }
+
+  function withdraw() public isOwner {
+    owner.transfer()
   }
 
   function pancakeCall(
