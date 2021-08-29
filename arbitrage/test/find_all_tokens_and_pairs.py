@@ -12,7 +12,7 @@ import json
 
 from test.find_liquidity_contracts import dex_supports
 from utils.globals import network_data
-from utils.web3_utils import get_web3
+from utils.web3_utils import get_web3, get_abi
 
 data = network_data()
 all_tokens = data['all_tokens']
@@ -96,5 +96,88 @@ def filter_tokens():
     io.write(json.dumps(data, indent=4, default=str))
 
 
+def find_corresponding_symbols():
+    for pair in data['pairs'].keys():
+        symbols = pair.split("_")
+
+        # find token[0]
+        for token in data['all_tokens'].keys():
+            if data['all_tokens'][token]['symbol'] == symbols[0]:
+                data['pairs'][pair]['token0'] = token
+
+        # find token[1]
+        for token in data['all_tokens'].keys():
+            if data['all_tokens'][token]['symbol'] == symbols[1]:
+                data['pairs'][pair]['token1'] = token
+    io = open('../resources/data.json', 'w')
+    io.write(json.dumps(data, indent=4, default=str))
+
+
+def find_token_not_found():
+    count = 0
+    for pair in data['pairs'].keys():
+        count = count + 1
+
+        # if we have no token0 or token1 present, look them up if possible, using one of the pool contracts
+        if 'token0' not in data['pairs'][pair].keys() or 'token1' not in data['pairs'][pair].keys():
+            print(f"Querying {pair}... {count}/{len(data['pairs'].keys())}")
+            results = []
+
+            # find a random, not null pool, and query it for token0 and token1
+            for dex in data['pairs'][pair]["pools"].keys():
+                pool = data['pairs'][pair]["pools"][dex]
+                if pool is not None:
+                    results = get_token_symbols_from_pool(pool)
+                    break
+
+            token0 = results[0]
+            symbol0 = results[1]
+            token1 = results[2]
+            symbol1 = results[3]
+
+            # find out which symbols to compare using the XXX_YYY key of the dict
+            split_pair = pair.split("_")
+
+            # now we have data anbout the pair
+            if 'token0' not in data['pairs'][pair].keys():
+                if split_pair[0] == symbol0 or split_pair[1] == symbol0:
+                    data['pairs'][pair]['address0'] = token0
+                    data['pairs'][pair]['token0'] = symbol0
+
+            if 'token1' not in data['pairs'][pair].keys():
+                if split_pair[0] == symbol1 or split_pair[1] == symbol1:
+                    data['pairs'][pair]['address1'] = token1
+                    data['pairs'][pair]['token1'] = symbol1
+
+    io = open('../resources/data.json', 'w')
+    io.write(json.dumps(data, indent=4, default=str))
+
+
+def get_token_symbols_from_pool(pool):
+    contract = web3.eth.contract(abi=get_abi(pool), address=pool)
+
+    # token0
+    token0_address = None
+    symbol0 = None
+    try:
+        token0_address = contract.functions.token0().call()
+        token0 = web3.eth.contract(abi=get_abi(token0_address), address=token0_address)
+        symbol0 = token0.functions.symbol().call()
+    except Exception:
+        pass
+
+    # token0
+    token1_address = None
+    symbol1 = None
+    try:
+        token1_address = contract.functions.token1().call()
+        token1 = web3.eth.contract(abi=get_abi(token1_address), address=token1_address)
+        symbol1 = token1.functions.symbol().call()
+    except Exception:
+        pass
+
+    return [token0_address, symbol0, token1_address, symbol1]
+
+
 if __name__ == "__main__":
-    filter_tokens()
+    find_token_not_found()
