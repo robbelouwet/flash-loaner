@@ -34,32 +34,49 @@ def amount_out(dex, pool, token_in, amount_in, token_out, results):
     results.append([dex, amount_in, token_in, _amount_out, token_out])
 
 
-async def get_average_reserve(pair):
+async def get_average_reserve(pair, reverse):
     reserves = []
     functions = []
     for dex in pair['pools'].keys():
         pool_adr = pair['pools'][dex]
         if pool_adr is not None:
-            functions.append([get_reserves, pool_adr, reserves])
+            functions.append([get_reserves, pool_adr, reserves, reverse])
 
     await execute_concurrently(functions)
     return reserves
 
 
 @run_in_executor
-def get_reserves(pool_adr, results):
+def get_reserves(pool_adr, results, reverse):
+    """
+    Returns the reserve of token0 in this pair!
+
+    :param reverse: specified if we want the reserves of the out_token
+    :param pool_adr:
+    :param results:
+    :return:
+    """
     contract = bsc_client.get_contract(pool_adr, cast_abi="PancakePair", cast=True)
-    reserve0, _, _ = contract.functions.getReserves().call()
-    results.append(reserve0)
+    reserve0, reserve1, _ = contract.functions.getReserves().call()
+    if reverse:
+        results.append(reserve1)
+    else:
+        results.append(reserve0)
 
 
-async def get_pair_quota(pair):
-    t0 = pair['token0']
-    t1 = pair['token1']
+async def get_pair_quota(pair, amount=None, reverse=False):
+    if reverse:
+        t0 = pair['token1']
+        t1 = pair['token0']
+    else:
+        t0 = pair['token0']
+        t1 = pair['token1']
 
-    # get 1% of the average reserve
-    reserves = await get_average_reserve(pair)
-    amount = round(Decimal(0.00001) * Decimal(sum(reserves) / len(reserves)))
+    # get 1% of the average reserve of token0
+    # in other words, token0 is considered the token that is being sold, token1 is whet we get in return
+    reserves = await get_average_reserve(pair, reverse)
+    if amount is None:
+        amount = 490 # round(Decimal(0.0001) * Decimal(sum(reserves) / len(reserves)))
 
     results = []
     functions = []
@@ -71,12 +88,57 @@ async def get_pair_quota(pair):
     await execute_concurrently(functions)
 
     print(tabulate(tabular_data=results, headers=["DEX", "AMOUNT IN", "TOKEN IN", "AMOUNT OUT", "TOKEN OUT"]))
+    return [results, amount]
+
+
+async def get_trade_prices(symbol_in, symbol_out, amount=None):
+    """
+    Calculates the amount of symbol_out tokens you will get for a certain amount of symbol_in tokens, for every DEX.
+    The amount is calculated automatically later on, based on available reserves to maximize profit
+
+    :param amount:
+    :param symbol_in:
+    :param symbol_out:
+    :return:
+    """
+    # first find the pair in our list of known pairs
+    pairs = data_client.get_pairs()
+    all_pair_keys = pairs.keys()
+
+    prices = []
+
+    option1 = f'{symbol_in}_{symbol_out}'
+    option2 = f'{symbol_out}_{symbol_in}'
+    if option1 in all_pair_keys:
+        if pairs[option1]['token0'] == symbol_in:
+            [prices, amount] = await get_pair_quota(pairs[option1], amount, False)
+        elif pairs[option1]['token1'] == symbol_in:
+            [prices, amount] = await get_pair_quota(pairs[option1], amount, True)
+
+    if option2 in all_pair_keys:
+        if pairs[option2]['token0'] == symbol_in:
+            [prices, amount] = await get_pair_quota(pairs[option2], amount, False)
+        elif pairs[option2]['token1'] == symbol_in:
+            [prices, amount] = await get_pair_quota(pairs[option2], amount, True)
+
+    return [prices, amount]
+
+
+async def get_trade_profit(symbol_in, symbol_out):
+    ### HERE vvvv gettrade...
+    [sell_amounts, bought_amount] = await get_trade_prices(symbol_in, symbol_out)
+    best_sell_amount = max(sell_amounts)
+
+    buy_back_amounts = await get_trade_prices(symbol_out, symbol_in)
+    best_buy_back_amount = max(buy_back_amounts)
+    return bought_amount - best_buy_back_amount
 
 
 async def main():
-    pairs = list(data_client.get_pairs().keys())[0:5]
-    for pair in pairs:
-        await get_pair_quota(data_client.get_pairs()[pair])
+    # pairs = list(data_client.get_pairs().keys())[0:5]
+    # for pair in pairs:
+    #    await get_pair_quota(data_client.get_pairs()[pair])
+    await get_trade_profit("BUSD", "WBNB")
 
 
 if __name__ == "__main__":
