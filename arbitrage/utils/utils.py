@@ -56,11 +56,12 @@ def get_pool_by_pair(pair, dex):
             return data['dex'][dex]['liquidityPools'][pool]['pool']
 
 
-def get_abi(address, cast_as_pancake=False, sleep=False):
+def get_abi(address, cast_abi, cast, sleep):
     """
     Queries bscscan for the abi. If it isn't known, it returns the pancake version of the abi (if specified)
+    :param cast: 
     :param sleep: useful with multi-threading to avoid hitting binance's API rate limit
-    :param cast_as_pancake:
+    :param cast_abi:
     :param address:
     :return:
     """
@@ -69,21 +70,23 @@ def get_abi(address, cast_as_pancake=False, sleep=False):
         time.sleep(0.05)
 
     # print(f'REQUESTING ABI: {req_count}; {address}')
-    res = requests.get('https://api.bscscan.com/api?module=contract&action=getabi'
-                       f'&address={address}&apikey=QR4DM459W4XUCSN7WMWGR6RU23YNS81NWC'
-                       '').json()['result']
+    res = ''
+    if not cast:
+        res = requests.get('https://api.bscscan.com/api?module=contract&action=getabi'
+                           f'&address={address}&apikey=QR4DM459W4XUCSN7WMWGR6RU23YNS81NWC'
+                           '').json()['result']
 
-    if res == 'Contract source code not verified':
-        if cast_as_pancake is not None:
-            if cast_as_pancake == "PancakeFactory":
+    if res == 'Contract source code not verified' or cast:
+        if cast_abi is not None:
+            if cast_abi == "PancakeFactory":
                 return data_client.get_factory_abi()
-            elif cast_as_pancake == "PancakeRouter":
+            elif cast_abi == "PancakeRouter":
                 return data_client.get_router_abi()
-            elif cast_as_pancake == "PancakePair":
+            elif cast_abi == "PancakePair":
                 return data_client.get_pair_abi()
     elif res[0] != '[':
         # TODO: is this dangerous? (recursion without stop condition)
-        return get_abi(address, cast_as_pancake)
+        return get_abi(address, cast_abi, cast, sleep)
     return res
 
 

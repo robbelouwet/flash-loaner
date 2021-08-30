@@ -2,6 +2,7 @@ import json
 from decimal import Decimal
 import requests
 
+from config import ROOT_DIR
 from model.bsc_client import BscClient
 from model.data_client import DataClient
 from utils.utils import get_symbol_by_address, get_address_by_symbol
@@ -33,7 +34,7 @@ def get_pair_prices(sell_token, buy_token, sell_amount):
     response = requests.get(
         f"https://bsc.api.0x.org/swap/v1/quote?buyToken={buy_token_address}&sellToken={sell_token_address}&sellAmount={sell_amount * (10 ** sell_decimals)}{f'&excludedSources={excludeSources}' if excludeSources is not None else ''}&slippagePercentage=0&gasPrice=0").json()
 
-    open('../resources/iets.json', 'w').write(json.dumps(response, indent=4))
+    open(f'{ROOT_DIR}/resources/iets.json', 'w').write(json.dumps(response, indent=4))
 
     arbitrages = []
 

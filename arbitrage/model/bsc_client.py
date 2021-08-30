@@ -13,8 +13,8 @@ class BscClient:
         self.__web3__ = Web3(Web3.HTTPProvider(node_url))
         self.__logger__ = get_logger()
 
-    def get_contract(self, address, cast=None):
-        abi = get_abi(address, cast)
+    def get_contract(self, address, cast_abi=None, cast=False, sleep=False):
+        abi = get_abi(address, cast_abi, cast, sleep)
         return self.__web3__.eth.contract(abi=abi, address=address)
 
     def get_pool(self, factory, pool_index):

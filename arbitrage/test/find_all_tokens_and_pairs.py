@@ -10,6 +10,7 @@ BakerySwap: None
 """
 import json
 
+from config import ROOT_DIR
 from model.bsc_client import BscClient
 from model.data_client import DataClient
 from test.find_liquidity_contracts import dex_supports
@@ -33,12 +34,12 @@ def find_all_tokens():
         for a1 in all_tokens.keys():
             t1 = all_tokens[a1]['symbol']
 
-    io = open('../resources/data.json', 'w')
+    io = open(f'{ROOT_DIR}/resources/data.json', 'w')
     io.write(json.dumps(data, indent=4, default=str))
 
 
 def print_popular_pairs():
-    io = open('../resources/popular_trade_pairs.json')
+    io = open(f'{ROOT_DIR}/resources/popular_trade_pairs.json')
     data1 = json.loads(io.read())
 
     count = 0
@@ -73,7 +74,7 @@ def print_popular_pairs():
         # add the pair
         data['pairs'][f'{t0}_{t1}'] = pair
 
-    io = open('../resources/data.json', 'w')
+    io = open(f'{ROOT_DIR}/resources/data.json', 'w')
     io.write(json.dumps(data, indent=4, default=str))
 
 
@@ -92,7 +93,7 @@ def filter_tokens():
     for key2 in keys_to_delete:
         data['pairs'].pop(key2)
 
-    io = open('../resources/data.json', 'w')
+    io = open(f'{ROOT_DIR}/resources/data.json', 'w')
     io.write(json.dumps(data, indent=4, default=str))
 
 
@@ -109,7 +110,7 @@ def find_corresponding_symbols():
         for token in data['all_tokens'].keys():
             if data['all_tokens'][token]['symbol'] == symbols[1]:
                 data['pairs'][pair]['token1'] = token
-    io = open('../resources/data.json', 'w')
+    io = open(f'{ROOT_DIR}/resources/data.json', 'w')
     io.write(json.dumps(data, indent=4, default=str))
 
 
@@ -161,7 +162,7 @@ def find_token_not_found():
                 data['pairs'][pair]['address0'] = token0
                 data['pairs'][pair]['token0'] = symbol0
 
-    io = open('../resources/data.json', 'w')
+    io = open(f'{ROOT_DIR}/resources/data.json', 'w')
     io.write(json.dumps(data, indent=4, default=str))
 
 

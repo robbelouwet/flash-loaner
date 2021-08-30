@@ -1,4 +1,6 @@
 import json
+
+from config import ROOT_DIR
 from model.data_client import DataClient
 from updater.main import get_approximate_reserves
 
@@ -17,7 +19,7 @@ def update_all_reserves():
             reserves['pool'] = data['dex'][dex]['liquidityPools'][pool]
             data['dex'][dex]['liquidityPools'][pool] = reserves
     print(json.dumps(data, indent=4, default=str))
-    io = open('../resources/data.json', 'w')
+    io = open(f'{ROOT_DIR}/resources/data.json', 'w')
     # io.write(json.dumps(data, indent=4, default=str))
 
 

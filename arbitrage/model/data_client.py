@@ -1,5 +1,7 @@
 import json
 
+from config import ROOT_DIR
+
 
 class DataClient:
     INSTANCE = None
@@ -50,6 +52,6 @@ class DataClient:
     @classmethod
     def get_instance(cls):
         if DataClient.INSTANCE is None:
-            DataClient.INSTANCE = DataClient('../resources/data.json', '../resources/abis.json')
+            DataClient.INSTANCE = DataClient(f'{ROOT_DIR}/resources/data.json', f'{ROOT_DIR}/resources/abis.json')
 
         return DataClient.INSTANCE

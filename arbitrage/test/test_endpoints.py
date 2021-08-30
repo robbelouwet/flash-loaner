@@ -1,6 +1,8 @@
 import requests
 import json
 
+from config import ROOT_DIR
+
 """
 This script is used to test out th api for realtime token prices.
 0x is an API that provides real time prices of liquidity pools from all kinds of DEX'es on the binance smart chain
@@ -24,7 +26,7 @@ tokens = requests.get(
 
 # tokens = requests.get("https://bsc.api.0x.org/swap/v1/price?sellToken=WETH&buyToken=DAI&sellAmount=1000000000000000000&excludedSources=Belt,DODO,DODO_V2,Ellipsis,Mooniswap,MultiHop,Nerve,SushiSwap,Smoothy,ApeSwap,CafeSwap,CheeseSwap,JulSwap,LiquidityProvider").json()
 
-io = open('../resources/iets.json', 'w')
+io = open(f'{ROOT_DIR}/resources/iets.json', 'w')
 io.write(json.dumps(tokens, indent=4).replace('\'', '\"'))
 
 pancake_kost = 0

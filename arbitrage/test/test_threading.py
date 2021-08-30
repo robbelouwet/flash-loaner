@@ -1,9 +1,8 @@
 import asyncio
+import sys
 import time
 from decimal import Decimal
-
 from tabulate import tabulate
-
 from model.bsc_client import BscClient
 from model.data_client import DataClient
 from utils.utils import run_in_executor, coroutine_wrapper, execute_concurrently
@@ -20,12 +19,13 @@ def amount_out(dex, pool, token_in, amount_in, token_out, results):
     :return:
     """
     # get reserves of pool
-    pool_ctr = bsc_client.get_instance().get_contract(pool, cast="PancakePair")
+    # We can cast to our PancakePair ABI, because every DEX is a fork from the same project/source code.
+    pool_ctr = bsc_client.get_instance().get_contract(pool, cast_abi="PancakePair", cast="cast")
     reserve_in, reserve_out, _ = pool_ctr.functions.getReserves().call()
 
     # get router
     router_address = data_client.get_data()['dex']['working'][dex]['router']
-    router = bsc_client.get_contract(router_address)
+    router = bsc_client.get_contract(router_address, cast_abi="PancakeRouter", cast="cast")
 
     # -> token_in
     # -> amount_in
@@ -48,7 +48,7 @@ async def get_average_reserve(pair):
 
 @run_in_executor
 def get_reserves(pool_adr, results):
-    contract = bsc_client.get_contract(pool_adr, "PancakePair")
+    contract = bsc_client.get_contract(pool_adr, cast_abi="PancakePair", cast="cast")
     reserve0, _, _ = contract.functions.getReserves().call()
     results.append(reserve0)
 
