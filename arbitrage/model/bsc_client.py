@@ -37,7 +37,7 @@ class BscClient:
     def get_decimals_from_contract(self, address, symbol):
         decimals = None
         try:
-            contract = self.get_contract(address)
+            contract = self.get_contract(address, cast_abi="PancakePair", cast=True, sleep=True)
 
             decimals = contract.functions.decimals().call()
             if decimals is not None:

@@ -35,14 +35,8 @@ class DataClient:
     def get_dexes(self):
         return self.__data__['dex']['working']
 
-    def get_factory_abi(self):
-        return self.__abis__['PancakeFactory']
-
-    def get_router_abi(self):
-        return self.__abis__['PancakeRouter']
-
-    def get_pair_abi(self):
-        return self.__abis__['PancakePair']
+    def get_cached_abi(self, key):
+        return self.__abis__[key]
 
     def update_data(self, data):
         io = open(self.__data_resource__, 'w')

@@ -2546,6 +2546,203 @@
             "token0": "BAT"
         }
     },
-    "tokens": {},
+    "tokens": {
+        "0x88f1A5ae2A3BF98AEAF342D26B30a79438c9142e": {
+            "symbol": "YFI",
+            "decimals": 18
+        },
+        "0x56b6fB708fC5732DEC1Afc8D8556423A2EDcCbD6": {
+            "symbol": "EOS",
+            "decimals": 18
+        },
+        "0xf79037F6f6bE66832DE4E7516be52826BC3cBcc4": {
+            "symbol": "HARD",
+            "decimals": 18
+        },
+        "0x728C5baC3C3e370E372Fc4671f9ef6916b814d8B": {
+            "symbol": "UNFI",
+            "decimals": 18
+        },
+        "0x7F70642d88cf1C4a3a7abb072B53B929b653edA5": {
+            "symbol": "YFII",
+            "decimals": 18
+        },
+        "0xA8c2B8eec3d368C0253ad3dae65a5F2BBB89c929": {
+            "symbol": "CTK",
+            "decimals": 6
+        },
+        "0x0Eb3a705fc54725037CC9e008bDede697f62F335": {
+            "symbol": "ATOM",
+            "decimals": 18
+        },
+        "0x8fF795a6F4D97E7887C79beA79aba5cc76444aDf": {
+            "symbol": "BCH",
+            "decimals": 18
+        },
+        "0x63870A18B6e42b01Ef1Ad8A2302ef50B7132054F": {
+            "symbol": "blink",
+            "decimals": 6
+        },
+        "0x393B312C01048b3ed2720bF1B090084C09e408A1": {
+            "symbol": "FRIES",
+            "decimals": 18
+        },
+        "0xAe9269f27437f0fcBC232d39Ec814844a51d6b8f": {
+            "symbol": "BURGER",
+            "decimals": 18
+        },
+        "0xE02dF9e3e622DeBdD69fb838bB799E3F168902c5": {
+            "symbol": "BAKE",
+            "decimals": 18
+        },
+        "0x009cF7bC57584b7998236eff51b98A168DceA9B0": {
+            "symbol": "SYRUP",
+            "decimals": 18
+        },
+        "0x0Da6Ed8B13214Ff28e9Ca979Dd37439e8a88F6c4": {
+            "symbol": "STAX",
+            "decimals": 18
+        },
+        "0xC808592e5b4585F982bc728d63b227634bc007a4": {
+            "symbol": "FROG",
+            "decimals": 18
+        },
+        "0xCa3F508B8e4Dd382eE878A314789373D80A5190A": {
+            "symbol": "BIFI",
+            "decimals": 18
+        },
+        "0xE64F5Cb844946C1F102Bd25bBD87a5aB4aE89Fbe": {
+            "symbol": "bROOBEE",
+            "decimals": 18
+        },
+        "0x2090c8295769791ab7A3CF1CC6e0AA19F35e441A": {
+            "symbol": "Fuel",
+            "decimals": 18
+        },
+        "0x3FdA9383A84C05eC8f7630Fe10AdF1fAC13241CC": {
+            "symbol": "DEGO",
+            "decimals": 18
+        },
+        "0xc5E6689C9c8B02be7C49912Ef19e79cF24977f03": {
+            "symbol": "ALPA",
+            "decimals": 18
+        },
+        "0xaDD8A06fd58761A5047426e160B2B88AD3B9D464": {
+            "symbol": "CHS",
+            "decimals": 18
+        },
+        "0x02E3eFcc9d912fbf2bf33D39F43427b56512C9B4": {
+            "symbol": "WOOL",
+            "decimals": 18
+        },
+        "0x1Ad8D89074AFA789A027B9a31d0bd14e254711D0": {
+            "symbol": "CRP",
+            "decimals": 18
+        },
+        "0xd4CB328A82bDf5f03eB737f37Fa6B370aef3e888": {
+            "symbol": "CREAM",
+            "decimals": 18
+        },
+        "0x9B44Df3318972bE845d83f961735609137C4C23c": {
+            "symbol": "PROPEL",
+            "decimals": 18
+        },
+        "0x32dFFc3fE8E3EF3571bF8a72c0d0015C5373f41D": {
+            "symbol": "JULb",
+            "decimals": 18
+        },
+        "0x4d4e595d643dc61EA7FCbF12e4b1AAA39f9975B8": {
+            "symbol": "PET",
+            "decimals": 18
+        },
+        "0x12e34cDf6A031a10FE241864c32fB03a4FDaD739": {
+            "symbol": "FREE",
+            "decimals": 18
+        },
+        "0xeDa21B525Ac789EaB1a08ef2404dd8505FfB973D": {
+            "symbol": "HPS",
+            "decimals": 18
+        },
+        "0xdF1F0026374d4BCc490BE5E316963Cf6Df2FfF19": {
+            "symbol": "INNBC",
+            "decimals": 18
+        },
+        "0xE40255C5d7fa7ceEc5120408C78C787CECB4cfdb": {
+            "symbol": "SWGb",
+            "decimals": 18
+        },
+        "0xf0E406c49C63AbF358030A299C0E00118C4C6BA5": {
+            "symbol": "NVT",
+            "decimals": 18
+        },
+        "0x1921168344840d1Ca5aCd82e8815F24582D4AD27": {
+            "symbol": "BOLO",
+            "decimals": 18
+        },
+        "0xE4Ae305ebE1AbE663f261Bc00534067C80ad677C": {
+            "symbol": "SPARTA",
+            "decimals": 18
+        },
+        "0xf307910A4c7bbc79691fD374889b36d8531B08e3": {
+            "symbol": "ANKR",
+            "decimals": 18
+        },
+        "0x658A109C5900BC6d2357c87549B651670E5b0539": {
+            "symbol": "FOR",
+            "decimals": 18
+        },
+        "0x3664d30A612824617e3Cf6935d6c762c8B476eDA": {
+            "symbol": "WEAPON",
+            "decimals": 18
+        },
+        "0xe49ed1B44117BB7379c1506cf5815aE33089e1A7": {
+            "symbol": "OBRb",
+            "decimals": 18
+        },
+        "0xC227f8EECC481A8e8BAa30A4754B109b81C4DfA4": {
+            "symbol": "VOXb",
+            "decimals": 18
+        },
+        "0xb9784C1633ef3b839563B988c323798634714368": {
+            "symbol": "PHO",
+            "decimals": 8
+        },
+        "0x87ff96aba480f1813aF5c780387d8De7cf7D8261": {
+            "symbol": "FLP",
+            "decimals": 18
+        },
+        "0xFd7B3A77848f1C2D67E05E54d78d174a0C850335": {
+            "symbol": "ONT",
+            "decimals": 18
+        },
+        "0xfcb5DF42e06A39E233dc707bb3a80311eFD11576": {
+            "symbol": "METH",
+            "decimals": 18
+        },
+        "0xaF53d56ff99f1322515E54FdDE93FF8b3b7DAFd5": {
+            "symbol": "PROM",
+            "decimals": 18
+        },
+        "0x40929FB2008c830731A3d972950bC13f70161c75": {
+            "symbol": "TUNA",
+            "decimals": 18
+        },
+        "0x3f515f0a8e93F2E2f891ceeB3Db4e62e202d7110": {
+            "symbol": "VIDT",
+            "decimals": 18
+        },
+        "0x1A2fb0Af670D0234c2857FaD35b789F8Cb725584": {
+            "symbol": "KUN",
+            "decimals": 18
+        },
+        "0xF68C9Df95a18B2A5a5fa1124d79EEEffBaD0B6Fa": {
+            "symbol": "ANY",
+            "decimals": 18
+        },
+        "0x101d82428437127bF1608F699CD651e6Abf9766E": {
+            "symbol": "BAT",
+            "decimals": 18
+        }
+    },
     "popular_trade_pairs": {}
 }

@@ -78,12 +78,7 @@ def get_abi(address, cast_abi, cast, sleep):
 
     if res == 'Contract source code not verified' or cast:
         if cast_abi is not None:
-            if cast_abi == "PancakeFactory":
-                return data_client.get_factory_abi()
-            elif cast_abi == "PancakeRouter":
-                return data_client.get_router_abi()
-            elif cast_abi == "PancakePair":
-                return data_client.get_pair_abi()
+            return data_client.get_cached_abi(cast_abi)
     elif res[0] != '[':
         # TODO: is this dangerous? (recursion without stop condition)
         return get_abi(address, cast_abi, cast, sleep)
