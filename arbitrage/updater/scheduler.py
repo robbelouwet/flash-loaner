@@ -1,9 +1,8 @@
 import json
-
+from model.data_client import DataClient
 from updater.main import get_approximate_reserves
-from utils.globals import network_data
 
-data = network_data()
+data = DataClient.get_instance().get_data()
 
 
 def update_all_reserves():

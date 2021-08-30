@@ -1,9 +1,9 @@
-from utils.globals import network_data
-from utils.web3_utils import get_web3, get_abi, get_decimals, get_symbol_by_address
+from model.bsc_client import BscClient
+from model.data_client import DataClient
+from utils.utils import get_web3, get_abi, get_decimals, get_symbol_by_address
 
-web3 = get_web3()
-
-data = network_data()
+data = DataClient.get_instance().get_data()
+bsc_client = BscClient.get_instance()
 
 
 def get_approximate_reserves(pool):
@@ -13,14 +13,13 @@ def get_approximate_reserves(pool):
     :param pool: address of the liquidity pool
     :return:
     """
-    abi = get_abi(pool)
-    contract = web3.eth.contract(abi=abi, address=pool)
+    contract = bsc_client.get_contract(pool)
 
     token0 = contract.functions.token0().call()
     token1 = contract.functions.token1().call()
 
-    token0_symbol = get_symbol_by_address(web3.toChecksumAddress(token0))
-    token1_symbol = get_symbol_by_address(web3.toChecksumAddress(token1))
+    token0_symbol = get_symbol_by_address(bsc_client.to_checksum_address(token0))
+    token1_symbol = get_symbol_by_address(bsc_client.to_checksum_address(token1))
 
     decimals0 = get_decimals(token0)
     decimals1 = get_decimals(token1)

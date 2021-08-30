@@ -926,7 +926,9 @@
                 "SushiSwap": "0x8c213a1479fC94D0F7af4c4e9129ba8e4b318352"
             },
             "address0": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-            "token0": "WBNB"
+            "token0": "WBNB",
+            "address1": "0xBf5140A22578168FD562DCcF235E5D43A02ce9B1",
+            "token1": "UNI"
         },
         "DOT_WBNB": {
             "pools": {
@@ -975,7 +977,9 @@
                 "SushiSwap": "0x2896A9a8a164b4aac0b63CF6b164381C16EC59Fe"
             },
             "address1": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-            "token1": "WBNB"
+            "token1": "WBNB",
+            "address0": "0x88f1A5ae2A3BF98AEAF342D26B30a79438c9142e",
+            "token0": "YFI"
         },
         "WBNB_ETH": {
             "pools": {
@@ -1177,7 +1181,9 @@
                 "SushiSwap": "0x0B8C1718b680f36b4F56a63CbbA1fAeD6bfBa78B"
             },
             "address1": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-            "token1": "WBNB"
+            "token1": "WBNB",
+            "address0": "0xa2B726B1145A4773F68593CF171187d8EBe4d495",
+            "token0": "INJ"
         },
         "YFII_WBNB": {
             "pools": {
@@ -1260,7 +1266,9 @@
                 "SushiSwap": "0xc7632B7b2d768bbb30a404E13E1dE48d1439ec21"
             },
             "address1": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-            "token1": "WBNB"
+            "token1": "WBNB",
+            "address0": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+            "token0": "USDC"
         },
         "ATOM_WBNB": {
             "pools": {
@@ -1598,7 +1606,9 @@
                 "SushiSwap": "0x18DD96C4AcCAfF702106b0923f671538a5abe540"
             },
             "address0": "0x55d398326f99059fF775485246999027B3197955",
-            "token0": "USDT"
+            "token0": "USDT",
+            "address1": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+            "token1": "USDC"
         },
         "BUSD_Cake": {
             "pools": {
@@ -2191,7 +2201,9 @@
                 "SushiSwap": null
             },
             "address0": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-            "token0": "WBNB"
+            "token0": "WBNB",
+            "address1": "0xe49ed1B44117BB7379c1506cf5815aE33089e1A7",
+            "token1": "OBRb"
         },
         "VOXb_WBNB": {
             "pools": {
@@ -2376,7 +2388,9 @@
                 "SushiSwap": null
             },
             "address1": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-            "token1": "WBNB"
+            "token1": "WBNB",
+            "address0": "0x40929FB2008c830731A3d972950bC13f70161c75",
+            "token0": "TUNA"
         },
         "FREE_BUSD": {
             "pools": {
@@ -2442,7 +2456,9 @@
                 "SushiSwap": "0xb27D1bCb7FcCf2AD02e1FbbE2cB97FaB4bf446Ac"
             },
             "address1": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-            "token1": "WBNB"
+            "token1": "WBNB",
+            "address0": "0x1A2fb0Af670D0234c2857FaD35b789F8Cb725584",
+            "token0": "KUN"
         },
         "USDT_BTCB": {
             "pools": {
@@ -2508,7 +2524,9 @@
                 "SushiSwap": null
             },
             "address1": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-            "token1": "WBNB"
+            "token1": "WBNB",
+            "address0": "0x101d82428437127bF1608F699CD651e6Abf9766E",
+            "token0": "BAT"
         },
         "BUSD_BAT": {
             "pools": {
@@ -2523,7 +2541,9 @@
                 "SushiSwap": null
             },
             "address1": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-            "token1": "BUSD"
+            "token1": "BUSD",
+            "address0": "0x101d82428437127bF1608F699CD651e6Abf9766E",
+            "token0": "BAT"
         }
     },
     "tokens": {},

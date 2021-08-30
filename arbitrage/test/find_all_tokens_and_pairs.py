@@ -10,13 +10,13 @@ BakerySwap: None
 """
 import json
 
+from model.bsc_client import BscClient
+from model.data_client import DataClient
 from test.find_liquidity_contracts import dex_supports
-from utils.globals import network_data
-from utils.web3_utils import get_web3, get_abi
 
-data = network_data()
-all_tokens = data['all_tokens']
-web3 = get_web3()
+data = DataClient.get_instance().get_data()
+all_tokens = DataClient.get_instance().get_tokens()
+bsc_client = BscClient.get_instance()
 
 
 def find_all_tokens():
@@ -44,10 +44,10 @@ def print_popular_pairs():
     count = 0
     for pair in data1['ethereum']['dexTrades']:
         t0 = pair['buyCurrency']['symbol']
-        a0 = web3.toChecksumAddress(pair['buyCurrency']['address'])
+        a0 = bsc_client.to_checksum_address(pair['buyCurrency']['address'])
 
         t1 = pair['sellCurrency']['symbol']
-        a1 = web3.toChecksumAddress(pair['sellCurrency']['address'])
+        a1 = bsc_client.to_checksum_address(pair['sellCurrency']['address'])
 
         duplicate = f'{t0}_{t1}' in data['pairs'].keys() or f'{t1}_{t0}' in data['pairs'].keys()
         if duplicate:
@@ -119,7 +119,7 @@ def find_token_not_found():
         count = count + 1
 
         # if we have no token0 or token1 present, look them up if possible, using one of the pool contracts
-        if 'token0' not in data['pairs'][pair].keys() or 'token1' not in data['pairs'][pair].keys():
+        if data['pairs'][pair]['token0'] is None or data['pairs'][pair]['token1'] is None:
             print(f"Querying {pair}... {count}/{len(data['pairs'].keys())}")
             results = []
 
@@ -138,40 +138,50 @@ def find_token_not_found():
             # find out which symbols to compare using the XXX_YYY key of the dict
             split_pair = pair.split("_")
 
-            # now we have data anbout the pair
-            if 'token0' not in data['pairs'][pair].keys():
-                if split_pair[0] == symbol0 or split_pair[1] == symbol0:
-                    data['pairs'][pair]['address0'] = token0
-                    data['pairs'][pair]['token0'] = symbol0
+            # if one of both token symbols is unknown (because of an unverified abi for example)
+            # try to recover it anyway
+            if split_pair[1] == symbol1:
+                symbol0 = split_pair[0]
+            elif split_pair[0] == symbol0:
+                symbol1 = split_pair[1]
+            elif split_pair[1] == symbol0:
+                symbol1 = split_pair[0]
+            elif split_pair[0] == symbol1:
+                symbol0 = split_pair[1]
 
-            if 'token1' not in data['pairs'][pair].keys():
-                if split_pair[0] == symbol1 or split_pair[1] == symbol1:
-                    data['pairs'][pair]['address1'] = token1
-                    data['pairs'][pair]['token1'] = symbol1
+            if split_pair[0] == symbol0 or split_pair[1] == symbol0:
+                data['pairs'][pair]['address0'] = token0
+                data['pairs'][pair]['token0'] = symbol0
+                data['pairs'][pair]['address1'] = token1
+                data['pairs'][pair]['token1'] = symbol1
+
+            if split_pair[0] == symbol1 or split_pair[1] == symbol1:
+                data['pairs'][pair]['address1'] = token1
+                data['pairs'][pair]['token1'] = symbol1
+                data['pairs'][pair]['address0'] = token0
+                data['pairs'][pair]['token0'] = symbol0
 
     io = open('../resources/data.json', 'w')
     io.write(json.dumps(data, indent=4, default=str))
 
 
 def get_token_symbols_from_pool(pool):
-    contract = web3.eth.contract(abi=get_abi(pool), address=pool)
+    contract = bsc_client.get_contract(pool)
 
     # token0
-    token0_address = None
+    token0_address = contract.functions.token0().call()
     symbol0 = None
     try:
-        token0_address = contract.functions.token0().call()
-        token0 = web3.eth.contract(abi=get_abi(token0_address), address=token0_address)
+        token0 = bsc_client.get_contract(token0_address)
         symbol0 = token0.functions.symbol().call()
     except Exception:
         pass
 
     # token0
-    token1_address = None
+    token1_address = contract.functions.token1().call()
     symbol1 = None
     try:
-        token1_address = contract.functions.token1().call()
-        token1 = web3.eth.contract(abi=get_abi(token1_address), address=token1_address)
+        token1 = bsc_client.get_contract(token1_address)
         symbol1 = token1.functions.symbol().call()
     except Exception:
         pass

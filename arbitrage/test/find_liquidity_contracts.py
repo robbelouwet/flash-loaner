@@ -1,12 +1,13 @@
 import json
 from decimal import Decimal
 
-from utils import globals
-from utils.web3_utils import get_web3, get_abi, get_symbol_by_address
+from model.bsc_client import BscClient
+from model.data_client import DataClient
+from utils.utils import get_symbol_by_address
 
-web3 = get_web3()
-network_data = globals.network_data()
-dexes = globals.network_data()['dex']['working']
+bsc_client = BscClient.get_instance()
+data = DataClient.get_instance().get_data()
+dexes = DataClient.get_instance().get_dexes()
 
 tokens = {}
 
@@ -33,8 +34,7 @@ def find_tokens_and_pairs(dex):
     """
     # get the factory of this DEX
     factory_address = dexes[dex]['factory']
-    factory_abi = get_abi(factory_address)
-    factory = web3.eth.contract(abi=factory_abi, address=factory_address)
+    factory = bsc_client.get_contract(factory_address)
 
     # amount of pools in this factory
     length = factory.functions.allPairsLength().call()
@@ -47,33 +47,28 @@ def find_tokens_and_pairs(dex):
 def process_pool(factory, i):
     # contract pool i
     pool_address = factory.functions.allPairs(i).call()
-    pool_abi = get_abi(pool_address)
-    pool = web3.eth.contract(abi=pool_abi, address=pool_address)
+    pool = bsc_client.get_contract(pool_address)
 
     # ERC20 addresses of both tokens in the pool
     token0 = pool.functions.token0().call()
     token1 = pool.functions.token1().call()
 
     # token 0
-    #token0_abi = get_abi(token0)
-    #token0_ctr = web3.eth.contract(abi=token0_abi, address=token0)
-    token0_symbol = get_symbol_by_address(token0) #  token0_ctr.functions.symbol().call()
+    token0_symbol = get_symbol_by_address(token0)
 
     # token 1
-    #token1_abi = get_abi(token1)
-    #token1_ctr = web3.eth.contract(abi=token1_abi, address=token1)
-    token1_symbol = get_symbol_by_address(token1) #  token1_ctr.functions.symbol().call()
+    token1_symbol = get_symbol_by_address(token1)
 
     # Add token 0 and token 1 to list of all known tokens, skip duplicates
-    if token0_symbol not in network_data['tokens'].keys():
-        network_data['tokens'][token0_symbol] = token0
+    if token0_symbol not in data['tokens'].keys():
+        data['tokens'][token0_symbol] = token0
 
-    if token1_symbol not in network_data['tokens'].keys():
-        network_data['tokens'][token1_symbol] = token1
+    if token1_symbol not in data['tokens'].keys():
+        data['tokens'][token1_symbol] = token1
 
     # Now add the pair to the list of known pairs, skip duplicates
-    duplicate = f'{token0_symbol}_{token1_symbol}' in network_data[
-        'pairs'].keys() or f'{token1_symbol}_{token0_symbol}' in network_data['pairs'].keys()
+    duplicate = f'{token0_symbol}_{token1_symbol}' in data[
+        'pairs'].keys() or f'{token1_symbol}_{token0_symbol}' in data['pairs'].keys()
 
     if not duplicate:
         # calculate popularity
@@ -81,7 +76,7 @@ def process_pool(factory, i):
         pair = {}
 
         # calculate pair popularity and its pools across DEX's
-        for dex in network_data['dex']['working']:
+        for dex in data['dex']['working']:
             pool = dex_supports(dex, [token0, token1])
 
             if pool is not None:
@@ -91,7 +86,7 @@ def process_pool(factory, i):
         pair['popularity'] = popularity
 
         # add the pair
-        network_data['pairs'][f'{token0_symbol}_{token1_symbol}'] = pair
+        data['pairs'][f'{token0_symbol}_{token1_symbol}'] = pair
 
         print(json.dumps(pair, indent=4, default=str))
 
@@ -104,9 +99,8 @@ def dex_supports(dex, token_pair):
     :param token_pair: [token 0, token 1]
     :return: None if not supported, else the pair's pool address
     """
-    factory_address = network_data['dex']['working'][dex]['factory']
-    factory_abi = get_abi(factory_address)
-    factory = web3.eth.contract(abi=factory_abi, address=factory_address)
+    factory_address = data['dex']['working'][dex]['factory']
+    factory = bsc_client.get_contract(factory_address)
 
     pool = None
     try:

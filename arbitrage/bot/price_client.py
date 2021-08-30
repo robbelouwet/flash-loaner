@@ -1,13 +1,12 @@
 import json
 from decimal import Decimal
 import requests
-from utils.web3_utils import get_symbol_by_address, get_address_by_symbol, get_web3, get_decimals, get_pool_by_pair
-from utils import globals
 
-web3 = get_web3()
-
-data = globals.network_data()
-token_info = data['all_tokens']
+from model.bsc_client import BscClient
+from model.data_client import DataClient
+from utils.utils import get_symbol_by_address, get_address_by_symbol
+all_tokens = DataClient.get_instance().get_tokens()
+bsc_client = BscClient.get_instance()
 
 
 def get_pair_prices(sell_token, buy_token, sell_amount):
@@ -20,14 +19,14 @@ def get_pair_prices(sell_token, buy_token, sell_amount):
     :param sell_amount: amount you want to sell, in human readable notation (eg: provide 2.3 (ETH) instead of 2300000000000000000 (wei))
     :return: a list of arbitrage opportunities, each item is a swapping pair's price for a certain DEX
     """
-    global token_info
+    global all_tokens
 
     # get the addresses of the tokens
     sell_token_address = get_address_by_symbol(sell_token)
     buy_token_address = get_address_by_symbol(buy_token)
 
     # first get the decimals of the sell_token, to rebase the sell_amount
-    sell_decimals = token_info[sell_token_address]['decimals']
+    sell_decimals = all_tokens[sell_token_address]['decimals']
 
     # The DEX's NOT to include in the response
     excludeSources = None  # "JetSwap,WaultSwap,Belt,DODO,DODO_V2,Ellipsis,Mooniswap,MultiHop,Nerve,SushiSwap,Smoothy,ApeSwap,CafeSwap,CheeseSwap,JulSwap,LiquidityProvider"
@@ -55,8 +54,8 @@ def get_pair_prices(sell_token, buy_token, sell_amount):
         taker = fakeOrder['takerToken']
 
         # figure out decimals for each token
-        maker_decimals = Decimal(token_info[web3.toChecksumAddress(maker)]['decimals'])
-        taker_decimals = Decimal(token_info[web3.toChecksumAddress(taker)]['decimals'])
+        maker_decimals = Decimal(all_tokens[bsc_client.to_checksum_address(maker)]['decimals'])
+        taker_decimals = Decimal(all_tokens[bsc_client.to_checksum_address(taker)]['decimals'])
 
         # rebase amounts with their corresponding decimals, using Decimal to keep precision
         maker_amount_rebased = maker_amount / (10 ** maker_decimals)

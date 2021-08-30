@@ -1,11 +1,10 @@
 import json
 from decimal import Decimal
 from bot.price_client import get_pair_prices, calculate_loan_amount
-from utils import globals
-from utils.web3_utils import get_pool_by_pair, get_pair_by_pool
+from model.data_client import DataClient
+from utils.utils import get_pool_by_pair, get_pair_by_pool
 
-all_pairs = globals.network_data()['pairs']['PancakeSwap_BakerySwap']
-
+all_pairs = DataClient.get_instance().get_pairs()
 
 def find_arbitrage():
     """"

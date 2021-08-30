@@ -2,12 +2,6 @@ import json
 import logging
 
 logger = None
-io3 = open('../resources/data.json')
-data = json.loads(io3.read())
-
-
-def network_data():
-    return data
 
 
 def get_logger():
