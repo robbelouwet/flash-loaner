@@ -87,7 +87,7 @@ async def get_pair_quota(pair, amount=None, reverse=False):
     # in other words, token0 is considered the token that is being sold, token1 is whet we get in return
     reserves = await get_average_reserve(pair, reverse)
     if amount is None:
-        amount = round(Decimal(0.00001) * Decimal(sum(reserves) / len(reserves)))
+        amount = round(Decimal(0.0001) * Decimal(sum(reserves) / len(reserves)))
 
     results = []
     functions = []
@@ -220,12 +220,29 @@ def summarize_profits(profits):
     summarized_profits = {}
     for key in keys:
         token = profits[key]['profit_token']
-        normalized_profit_amount = normalize(token, profits[key]['profit_amount'])
         if token in summarized_profits.keys():
-            summarized_profits[token] = summarized_profits[token] + normalized_profit_amount
+            summarized_profits[token] = summarized_profits[token] + profits[key]['profit_amount']
         else:
-            summarized_profits[token] = normalized_profit_amount
+            summarized_profits[token] = profits[key]['profit_amount']
     return summarized_profits
+
+
+async def convert_to_usd(results):
+    keys = results.keys()
+
+    base_token = "WBNB"
+
+    converted_results = {}
+    for token in keys:
+        if token == base_token:
+            converted_results[token] = normalize(token, results[token])
+        else:
+            [prices, _] = await get_trade_prices(token, base_token, results[token])
+            if len(prices) != 0:
+                converted_results[token] = normalize(base_token, max([r[3] for r in prices]))
+
+
+    return converted_results
 
 
 # +- 48s
@@ -242,6 +259,8 @@ async def main():
     results = await execute_concurrently(functions, True)
     summarized = summarize_profits(results)
     print(json.dumps(summarized, indent=4, default=str))
+
+    await convert_to_usd(summarized)
 
 
 def run():
