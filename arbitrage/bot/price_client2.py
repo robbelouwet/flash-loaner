@@ -1,3 +1,5 @@
+import sys
+sys.path.append(f'../model')
 import asyncio
 import time
 from decimal import Decimal
@@ -6,6 +8,7 @@ from model.bsc_client import BscClient
 from model.data_client import DataClient
 from utils.globals import get_logger
 from utils.utils import run_in_executor, execute_concurrently
+import cProfile
 
 logger = get_logger()
 bsc_client = BscClient.get_instance()
@@ -163,7 +166,8 @@ async def get_trade_profit(symbol_in, symbol_out):
         print(f'{symbol_in}')
         print('###')
     else:
-        logger.info(f'Tested {round(normalized_bought_amount, 5):,} {symbol_in}_{symbol_out}: {round(normalized_profit, 5):,} {symbol_in} loss')
+        logger.info(
+            f'Tested {round(normalized_bought_amount, 5):,} {symbol_in}_{symbol_out}: {round(normalized_profit, 5):,} {symbol_in} loss')
 
     return [profit, symbol_in]
 
@@ -223,7 +227,5 @@ async def main_threaded():
     await execute_concurrently(functions, True)
 
 
-if __name__ == "__main__":
-    start_time = time.time()
+def run():
     asyncio.run(main_threaded(), debug=True)
-    print(f"Execution time: {round(time.time() - start_time, 2)}s")
