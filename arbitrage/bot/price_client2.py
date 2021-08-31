@@ -1,18 +1,19 @@
 import asyncio
-import sys
 import time
 from decimal import Decimal
 from tabulate import tabulate
 from model.bsc_client import BscClient
 from model.data_client import DataClient
+from utils.globals import get_logger
 from utils.utils import run_in_executor, execute_concurrently
 
+logger = get_logger()
 bsc_client = BscClient.get_instance()
 data_client = DataClient.get_instance()
 
 
 @run_in_executor
-def amount_out(dex, pool, token_in, amount_in, token_out, results):
+def amount_out(dex, pool, token_in, amount_in, token_out, results, reverse=False, ):
     """
     Get amountOut for a specific pair
 
@@ -22,6 +23,11 @@ def amount_out(dex, pool, token_in, amount_in, token_out, results):
     # We can cast to our PancakePair ABI, because every DEX is a fork from UniSwap, they all share the same ABI.
     pool_ctr = bsc_client.get_instance().get_contract(pool, cast_abi="PancakePair", cast=True)
     reserve_in, reserve_out, _ = pool_ctr.functions.getReserves().call()
+
+    if reverse:
+        temp = reserve_in
+        reserve_in = reserve_out
+        reserve_out = temp
 
     # get router
     router_address = data_client.get_data()['dex']['working'][dex]['router']
@@ -76,18 +82,16 @@ async def get_pair_quota(pair, amount=None, reverse=False):
     # in other words, token0 is considered the token that is being sold, token1 is whet we get in return
     reserves = await get_average_reserve(pair, reverse)
     if amount is None:
-        amount = 490 # round(Decimal(0.0001) * Decimal(sum(reserves) / len(reserves)))
+        amount = round(Decimal(0.0001) * Decimal(sum(reserves) / len(reserves)))
 
     results = []
     functions = []
     for dex in pair['pools'].keys():
         pool_adr = pair['pools'][dex]
         if pool_adr is not None:
-            functions.append([amount_out, dex, pool_adr, t0, amount, t1, results])
+            functions.append([amount_out, dex, pool_adr, t0, amount, t1, results, reverse])
 
     await execute_concurrently(functions)
-
-    print(tabulate(tabular_data=results, headers=["DEX", "AMOUNT IN", "TOKEN IN", "AMOUNT OUT", "TOKEN OUT"]))
     return [results, amount]
 
 
@@ -125,23 +129,101 @@ async def get_trade_prices(symbol_in, symbol_out, amount=None):
 
 
 async def get_trade_profit(symbol_in, symbol_out):
-    ### HERE vvvv gettrade...
-    [sell_amounts, bought_amount] = await get_trade_prices(symbol_in, symbol_out)
-    best_sell_amount = max(sell_amounts)
+    # First, find the best opportunity to sell our flash loan
+    [results, bought_amount] = await get_trade_prices(symbol_in, symbol_out)
+    normalized_bought_amount = normalize(symbol_in, bought_amount)
+    best_sell_amount = max([r[3] for r in results])
+    table_in = ""
+    normalized_in = []
+    for r in results:
+        if r[3] == best_sell_amount:
+            normalized_in = [normalize_results(r)]
+            table_in = tabulate(tabular_data=normalized_in,
+                                headers=["DEX", "AMOUNT IN", "TOKEN IN", "AMOUNT OUT", "TOKEN OUT"])
 
-    buy_back_amounts = await get_trade_prices(symbol_out, symbol_in)
-    best_buy_back_amount = max(buy_back_amounts)
-    return bought_amount - best_buy_back_amount
+    # Second, find the best opportunity to trade our loaned amount back
+    [buy_back_amounts, _] = await get_trade_prices(symbol_out, symbol_in, amount=best_sell_amount)
+    best_buy_back_amount = max([r[3] for r in buy_back_amounts])
+    table_out = ""
+    normalized_out = []
+    for r in buy_back_amounts:
+        if r[3] == best_buy_back_amount:
+            normalized_out = [normalize_results(r)]
+            table_out = tabulate(tabular_data=normalized_out,
+                                 headers=["DEX", "AMOUNT IN", "TOKEN IN", "AMOUNT OUT", "TOKEN OUT"])
+
+    # calculate profit
+    profit = best_buy_back_amount - bought_amount
+    normalized_profit = normalize(symbol_in, profit)
+    if profit > 0:
+        print(table_in)
+        print(table_out)
+        print('###')
+        print(f"Profit: {'%f' % normalized_profit}")
+        print(f'{symbol_in}')
+        print('###')
+    else:
+        logger.info(f'Tested {round(normalized_bought_amount, 5):,} {symbol_in}_{symbol_out}: {round(normalized_profit, 5):,} {symbol_in} loss')
+
+    return [profit, symbol_in]
 
 
+def normalize_results(res):
+    symbol0 = res[2]
+    symbol1 = res[4]
+
+    amount0_normalized = normalize(symbol0, res[1])
+    amount1_normalized = normalize(symbol1, res[3])
+
+    return [res[0], amount0_normalized, res[2], amount1_normalized, res[4]]
+
+
+def normalize(symbol, amount):
+    """
+    Given a symbol and an amount, returns the normalized amount according to its saved decimal count.
+    :param amount:
+    :param symbol:
+    :param res:
+    :return:
+    """
+
+    all_tokens = data_client.get_tokens()
+
+    decimals = 0
+    for adr in all_tokens.keys():
+        if all_tokens[adr]['symbol'] == symbol:
+            decimals = all_tokens[adr]['decimals']
+            break
+    return Decimal(amount / (10 ** decimals))
+
+
+# +- 185s
 async def main():
-    # pairs = list(data_client.get_pairs().keys())[0:5]
-    # for pair in pairs:
-    #    await get_pair_quota(data_client.get_pairs()[pair])
-    await get_trade_profit("BUSD", "WBNB")
+    all_pairs = data_client.get_pairs().keys()
+
+    count = 0
+    for pair in all_pairs:
+        t0 = data_client.get_pairs()[pair]['token0']
+        t1 = data_client.get_pairs()[pair]['token1']
+        await get_trade_profit(t0, t1)
+        count = count + 1
+
+
+# +- 48s
+async def main_threaded():
+    all_pairs = data_client.get_pairs().keys()
+
+    functions = []
+
+    for pair in all_pairs:
+        t0 = data_client.get_pairs()[pair]['token0']
+        t1 = data_client.get_pairs()[pair]['token1']
+        functions.append([get_trade_profit, t0, t1])
+
+    await execute_concurrently(functions, True)
 
 
 if __name__ == "__main__":
     start_time = time.time()
-    asyncio.run(main(), debug=True)
+    asyncio.run(main_threaded(), debug=True)
     print(f"Execution time: {round(time.time() - start_time, 2)}s")

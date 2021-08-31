@@ -124,7 +124,7 @@ async def coroutine_wrapper(fun, *args, returns=False):
         return await fun(*args)
 
 
-async def execute_concurrently(blocking_functions):
+async def execute_concurrently(blocking_functions, are_async=False):
     """
     Expects an array of blocking function pointers with their arguments,
     and executes them asynchronously and concurrently.
@@ -138,13 +138,18 @@ async def execute_concurrently(blocking_functions):
         [bar, c, d]
     ]
 
+    :param are_async: if False, wraps the funcions in coroutines with wrap_coroutine, if True does nothing
     :param blocking_functions:
     :return: a dictionary, keys are the method names, values are the return values for that method
     """
 
     tasks = []
     for fun_ptrs in blocking_functions:
-        tasks.append(asyncio.create_task(coroutine_wrapper(*fun_ptrs), name=fun_ptrs[0].__name__))
+        if are_async:
+            coroutine = fun_ptrs[0](*fun_ptrs[1:len(fun_ptrs)])
+        else:
+            coroutine = coroutine_wrapper(*fun_ptrs)
+        tasks.append(asyncio.create_task(coroutine, name=fun_ptrs[0].__name__))
 
     task_results = {}
     for t in tasks:
