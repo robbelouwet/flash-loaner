@@ -152,7 +152,11 @@ async def execute_concurrently(blocking_functions, are_async=False):
         tasks.append(asyncio.create_task(coroutine, name=fun_ptrs[0].__name__))
 
     task_results = {}
+    count = 0
     for t in tasks:
-        task_results[t.get_name()] = await t
+        res = await t
+        if res is not None:
+            task_results[f'{t.get_name()}_{count}'] = res
+        count = count + 1
 
     return task_results

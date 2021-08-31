@@ -1,4 +1,6 @@
+import json
 import sys
+
 sys.path.append(f'../model')
 import asyncio
 import time
@@ -85,7 +87,7 @@ async def get_pair_quota(pair, amount=None, reverse=False):
     # in other words, token0 is considered the token that is being sold, token1 is whet we get in return
     reserves = await get_average_reserve(pair, reverse)
     if amount is None:
-        amount = round(Decimal(0.0001) * Decimal(sum(reserves) / len(reserves)))
+        amount = round(Decimal(0.00001) * Decimal(sum(reserves) / len(reserves)))
 
     results = []
     functions = []
@@ -137,22 +139,24 @@ async def get_trade_profit(symbol_in, symbol_out):
     normalized_bought_amount = normalize(symbol_in, bought_amount)
     best_sell_amount = max([r[3] for r in results])
     table_in = ""
-    normalized_in = []
+    best_sell_oportunity = []
     for r in results:
         if r[3] == best_sell_amount:
-            normalized_in = [normalize_results(r)]
-            table_in = tabulate(tabular_data=normalized_in,
+            best_sell_oportunity = r
+            normalized_in = normalize_results(r)
+            table_in = tabulate(tabular_data=[normalized_in],
                                 headers=["DEX", "AMOUNT IN", "TOKEN IN", "AMOUNT OUT", "TOKEN OUT"])
 
     # Second, find the best opportunity to trade our loaned amount back
     [buy_back_amounts, _] = await get_trade_prices(symbol_out, symbol_in, amount=best_sell_amount)
     best_buy_back_amount = max([r[3] for r in buy_back_amounts])
+    best_buy_back_opportunity = []
     table_out = ""
-    normalized_out = []
     for r in buy_back_amounts:
         if r[3] == best_buy_back_amount:
-            normalized_out = [normalize_results(r)]
-            table_out = tabulate(tabular_data=normalized_out,
+            normalized_out = normalize_results(r)
+            best_buy_back_opportunity = r
+            table_out = tabulate(tabular_data=[normalized_out],
                                  headers=["DEX", "AMOUNT IN", "TOKEN IN", "AMOUNT OUT", "TOKEN OUT"])
 
     # calculate profit
@@ -165,11 +169,20 @@ async def get_trade_profit(symbol_in, symbol_out):
         print(f"Profit: {'%f' % normalized_profit}")
         print(f'{symbol_in}')
         print('###')
+
+        # [profit, symbol_in]
+        ret = {
+            "profit_amount": profit,
+            "profit_token": symbol_in,
+            "start_loan": bought_amount,
+            "sell_opportunity": best_sell_oportunity,
+            "buy_back_opportunity": best_buy_back_opportunity
+        }
+        return ret
     else:
         logger.info(
             f'Tested {round(normalized_bought_amount, 5):,} {symbol_in}_{symbol_out}: {round(normalized_profit, 5):,} {symbol_in} loss')
-
-    return [profit, symbol_in]
+        return None
 
 
 def normalize_results(res):
@@ -201,20 +214,22 @@ def normalize(symbol, amount):
     return Decimal(amount / (10 ** decimals))
 
 
-# +- 185s
-async def main():
-    all_pairs = data_client.get_pairs().keys()
+def summarize_profits(profits):
+    keys = profits.keys()
 
-    count = 0
-    for pair in all_pairs:
-        t0 = data_client.get_pairs()[pair]['token0']
-        t1 = data_client.get_pairs()[pair]['token1']
-        await get_trade_profit(t0, t1)
-        count = count + 1
+    summarized_profits = {}
+    for key in keys:
+        token = profits[key]['profit_token']
+        normalized_profit_amount = normalize(token, profits[key]['profit_amount'])
+        if token in summarized_profits.keys():
+            summarized_profits[token] = summarized_profits[token] + normalized_profit_amount
+        else:
+            summarized_profits[token] = normalized_profit_amount
+    return summarized_profits
 
 
 # +- 48s
-async def main_threaded():
+async def main():
     all_pairs = data_client.get_pairs().keys()
 
     functions = []
@@ -224,8 +239,10 @@ async def main_threaded():
         t1 = data_client.get_pairs()[pair]['token1']
         functions.append([get_trade_profit, t0, t1])
 
-    await execute_concurrently(functions, True)
+    results = await execute_concurrently(functions, True)
+    summarized = summarize_profits(results)
+    print(json.dumps(summarized, indent=4, default=str))
 
 
 def run():
-    asyncio.run(main_threaded(), debug=True)
+    asyncio.run(main(), debug=True)
