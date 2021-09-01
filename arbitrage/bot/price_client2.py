@@ -227,26 +227,51 @@ def summarize_profits(profits):
     return summarized_profits
 
 
-async def convert_to_usd(results):
+async def convert_all_to_stablecoin(results):
     keys = results.keys()
 
-    base_token = "WBNB"
+    base_tokens = ["WBNB", "BUSD"]
 
     converted_results = {}
-    for token in keys:
-        if token == base_token:
-            converted_results[token] = normalize(token, results[token])
-        else:
-            [prices, _] = await get_trade_prices(token, base_token, results[token])
-            if len(prices) != 0:
-                converted_results[token] = normalize(base_token, max([r[3] for r in prices]))
+    conversions = []
+    for base_token in base_tokens:
+        converted_results[base_token] = 0
+        for token in keys:
+            if results[token] is None:
+                continue
+            conversions.append([to_stablecoin, token, results[token], base_token])
+
+    results = await execute_concurrently(conversions, are_async=True)
+
+    for res in results:
+        if results[res][2] is None:
+            continue
+        stablec = results[res][1]
+        stablec_amount = results[res][2]
+        converted_results[stablec] = converted_results[stablec] + stablec_amount
+
+    # lastly, convert our WBNB amount to BUSD:
+    [_, _, busd] = await to_stablecoin("WBNB", converted_results["WBNB"], "BUSD")
+    converted_results["BUSD"] = converted_results["BUSD"] + busd
+    return converted_results["BUSD"]
 
 
-    return converted_results
+async def to_stablecoin(token, amount, stablecoin):
+    stable_coin_amount = None
+
+    if token == stablecoin:
+        stable_coin_amount = amount
+    else:
+        [prices, _] = await get_trade_prices(token, stablecoin, amount)
+        if len(prices) != 0:
+            stable_coin_amount = max([r[3] for r in prices])
+
+    return [token, stablecoin, stable_coin_amount]
 
 
 # +- 48s
 async def main():
+    start_time = time.time()
     all_pairs = data_client.get_pairs().keys()
 
     functions = []
@@ -257,10 +282,13 @@ async def main():
         functions.append([get_trade_profit, t0, t1])
 
     results = await execute_concurrently(functions, True)
+
     summarized = summarize_profits(results)
     print(json.dumps(summarized, indent=4, default=str))
 
-    await convert_to_usd(summarized)
+    total_busd_profit = await convert_all_to_stablecoin(summarized)
+    print(f'Total profit: {normalize("BUSD", total_busd_profit)} BUSD')
+    print(f'Execution time: {time.time() - start_time}')
 
 
 def run():

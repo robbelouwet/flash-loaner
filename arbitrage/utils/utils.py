@@ -103,6 +103,7 @@ def run_in_executor(f):
     @functools.wraps(f)
     async def inner(*args, **kwargs):
         loop = asyncio.get_running_loop()
+        executor = asyncio.exec
         return await loop.run_in_executor(None, lambda: f(*args, **kwargs))
 
     return inner
