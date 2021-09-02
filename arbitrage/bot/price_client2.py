@@ -10,7 +10,6 @@ from model.bsc_client import BscClient
 from model.data_client import DataClient
 from utils.globals import get_logger
 from utils.utils import run_in_executor, execute_concurrently
-import cProfile
 
 logger = get_logger()
 bsc_client = BscClient.get_instance()
@@ -76,6 +75,9 @@ def get_reserves(pool_adr, results, reverse):
 
 
 async def get_pair_quota(pair, amount=None, reverse=False):
+    """
+    Gets the best offer for selling and rebuying. token[0] (token IN) is what wel sell first (what we flash loan),
+    """
     if reverse:
         t0 = pair['token1']
         t1 = pair['token0']
@@ -91,6 +93,7 @@ async def get_pair_quota(pair, amount=None, reverse=False):
 
     results = []
     functions = []
+    # now for every dex, see how many OUT tokens we get for a given amount of IN tokens
     for dex in pair['pools'].keys():
         pool_adr = pair['pools'][dex]
         if pool_adr is not None:
@@ -116,6 +119,9 @@ async def get_trade_prices(symbol_in, symbol_out, amount=None):
 
     prices = []
 
+    # try both pairs
+    # see if, in our saved pairs in the json, either BUSD_WBNB or WBNB_BUSD exists
+    # if one does, then get the best offer for selling and buying
     option1 = f'{symbol_in}_{symbol_out}'
     option2 = f'{symbol_out}_{symbol_in}'
     if option1 in all_pair_keys:
