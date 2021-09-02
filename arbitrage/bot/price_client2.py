@@ -87,7 +87,7 @@ async def get_pair_quota(pair, amount=None, reverse=False):
     # in other words, token0 is considered the token that is being sold, token1 is whet we get in return
     reserves = await get_average_reserve(pair, reverse)
     if amount is None:
-        amount = round(Decimal(0.0001) * Decimal(sum(reserves) / len(reserves)))
+        amount = round(Decimal(0.00001) * Decimal(sum(reserves) / len(reserves)))
 
     results = []
     functions = []
