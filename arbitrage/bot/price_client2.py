@@ -1,8 +1,6 @@
 import json
-import sys
-
-sys.path.append(f'../model')
 import asyncio
+import sys
 import time
 from decimal import Decimal
 from tabulate import tabulate
@@ -16,17 +14,41 @@ bsc_client = BscClient.get_instance()
 data_client = DataClient.get_instance()
 
 
-@run_in_executor
-def amount_out(dex, pool, token_in, amount_in, token_out, results, reverse=False, ):
-    """
-    Get amountOut for a specific pair
+def write_results_to_csv(results, block):
+    res_keys = results.keys()
 
-    :return:
+    for key in res_keys:
+        pass
+
+
+@run_in_executor
+def amount_out(dex, pool, token_in, amount_in, token_out, results, reverse=False):
+    """
+    For a given DEX and a given pair, calculate the optimal amount of token0 to buy, so that
+    we get the optimal amount of token1 in return.
+
+    @param amount_in: if specified, will use this amount to calculate price, instead of calculating optimal amount
+    @param dex: the dex: e.g.: 'PancakeSwap'
+    @param pool: pool address of the pair, used to query reserves
+    @param token_in: symbol of the token to sell
+    @param token_out: symbol of the token to buy
+    @param results: array that contains the amount we're buying, and the amount we get for it n return
+    @param reverse: whether we want to reverse the trade (so buy token_in and sell token_out)
     """
     # get reserves of pool
     # We can cast to our PancakePair ABI, because every DEX is a fork from UniSwap, they all share the same ABI.
     pool_ctr = bsc_client.get_instance().get_contract(pool, cast_abi="PancakePair", cast=True)
     reserve_in, reserve_out, _ = pool_ctr.functions.getReserves().call()
+
+    # The more we buy, the less equivalent value we get for it in return
+    # the less we buy, the less arbitrage profit we will make
+    # calculate a (somewhat) optimal buy amount based on reserves
+    if amount_in is None:
+        amount_in = calculate_buy_amount(reserve_in, reserve_out)
+
+    # sometimes the reserve is really low on dexes that aren't widely used
+    if amount_in < 1:
+        return None
 
     if reverse:
         temp = reserve_in
@@ -40,8 +62,32 @@ def amount_out(dex, pool, token_in, amount_in, token_out, results, reverse=False
     # -> token_in
     # -> amount_in
     # <- amount_out
+
     _amount_out = router.functions.getAmountOut(amount_in, reserve_in, reserve_out).call()
-    results.append([dex, amount_in, token_in, _amount_out, token_out])
+    if _amount_out == 0:
+        return None
+
+    if reverse:
+        unit_price = amount_in / _amount_out
+
+    else:
+        unit_price = _amount_out / amount_in
+
+    results.append(
+        [dex, amount_in, token_in, _amount_out, token_out, unit_price, amount_in / reserve_in,
+         _amount_out / reserve_out])
+
+
+def calculate_buy_amount(reserve_in, reserve_out):
+    """
+    Used to calculate the optimal amount to buy.
+
+    @param reserve_in:
+    @param reserve_out:
+    @return:
+    """
+    return int(0.01 * reserve_in)
+    # return 1
 
 
 async def get_average_reserve(pair, reverse):
@@ -85,12 +131,6 @@ async def get_pair_quota(pair, amount=None, reverse=False):
         t0 = pair['token0']
         t1 = pair['token1']
 
-    # get 1% of the average reserve of token0
-    # in other words, token0 is considered the token that is being sold, token1 is whet we get in return
-    reserves = await get_average_reserve(pair, reverse)
-    if amount is None:
-        amount = round(Decimal(0.00001) * Decimal(sum(reserves) / len(reserves)))
-
     results = []
     functions = []
     # now for every dex, see how many OUT tokens we get for a given amount of IN tokens
@@ -100,7 +140,7 @@ async def get_pair_quota(pair, amount=None, reverse=False):
             functions.append([amount_out, dex, pool_adr, t0, amount, t1, results, reverse])
 
     await execute_concurrently(functions)
-    return [results, amount]
+    return results
 
 
 async def get_trade_prices(symbol_in, symbol_out, amount=None):
@@ -117,7 +157,7 @@ async def get_trade_prices(symbol_in, symbol_out, amount=None):
     pairs = data_client.get_pairs()
     all_pair_keys = pairs.keys()
 
-    prices = []
+    results = []
 
     # try both pairs
     # see if, in our saved pairs in the json, either BUSD_WBNB or WBNB_BUSD exists
@@ -126,69 +166,17 @@ async def get_trade_prices(symbol_in, symbol_out, amount=None):
     option2 = f'{symbol_out}_{symbol_in}'
     if option1 in all_pair_keys:
         if pairs[option1]['token0'] == symbol_in:
-            [prices, amount] = await get_pair_quota(pairs[option1], amount, False)
+            results = await get_pair_quota(pairs[option1], amount, False)
         elif pairs[option1]['token1'] == symbol_in:
-            [prices, amount] = await get_pair_quota(pairs[option1], amount, True)
+            results = await get_pair_quota(pairs[option1], amount, True)
 
     if option2 in all_pair_keys:
         if pairs[option2]['token0'] == symbol_in:
-            [prices, amount] = await get_pair_quota(pairs[option2], amount, False)
+            results = await get_pair_quota(pairs[option2], amount, False)
         elif pairs[option2]['token1'] == symbol_in:
-            [prices, amount] = await get_pair_quota(pairs[option2], amount, True)
+            results = await get_pair_quota(pairs[option2], amount, True)
 
-    return [prices, amount]
-
-
-async def get_trade_profit(symbol_in, symbol_out):
-    # First, find the best opportunity to sell our flash loan
-    [results, bought_amount] = await get_trade_prices(symbol_in, symbol_out)
-    normalized_bought_amount = normalize(symbol_in, bought_amount)
-    best_sell_amount = max([r[3] for r in results])
-    table_in = ""
-    best_sell_oportunity = []
-    for r in results:
-        if r[3] == best_sell_amount:
-            best_sell_oportunity = r
-            normalized_in = normalize_results(r)
-            table_in = tabulate(tabular_data=[normalized_in],
-                                headers=["DEX", "AMOUNT IN", "TOKEN IN", "AMOUNT OUT", "TOKEN OUT"])
-
-    # Second, find the best opportunity to trade our loaned amount back
-    [buy_back_amounts, _] = await get_trade_prices(symbol_out, symbol_in, amount=best_sell_amount)
-    best_buy_back_amount = max([r[3] for r in buy_back_amounts])
-    best_buy_back_opportunity = []
-    table_out = ""
-    for r in buy_back_amounts:
-        if r[3] == best_buy_back_amount:
-            normalized_out = normalize_results(r)
-            best_buy_back_opportunity = r
-            table_out = tabulate(tabular_data=[normalized_out],
-                                 headers=["DEX", "AMOUNT IN", "TOKEN IN", "AMOUNT OUT", "TOKEN OUT"])
-
-    # calculate profit
-    profit = best_buy_back_amount - bought_amount
-    normalized_profit = normalize(symbol_in, profit)
-    if profit > 0:
-        print(table_in)
-        print(table_out)
-        print('###')
-        print(f"Profit: {'%f' % normalized_profit}")
-        print(f'{symbol_in}')
-        print('###')
-
-        # [profit, symbol_in]
-        ret = {
-            "profit_amount": profit,
-            "profit_token": symbol_in,
-            "start_loan": bought_amount,
-            "sell_opportunity": best_sell_oportunity,
-            "buy_back_opportunity": best_buy_back_opportunity
-        }
-        return ret
-    else:
-        logger.info(
-            f'Tested {round(normalized_bought_amount, 5):,} {symbol_in}_{symbol_out}: {round(normalized_profit, 5):,} {symbol_in} loss')
-        return None
+    return results
 
 
 def normalize_results(res):
@@ -206,7 +194,6 @@ def normalize(symbol, amount):
     Given a symbol and an amount, returns the normalized amount according to its saved decimal count.
     :param amount:
     :param symbol:
-    :param res:
     :return:
     """
 
@@ -218,19 +205,6 @@ def normalize(symbol, amount):
             decimals = all_tokens[adr]['decimals']
             break
     return Decimal(amount / (10 ** decimals))
-
-
-def summarize_profits(profits):
-    keys = profits.keys()
-
-    summarized_profits = {}
-    for key in keys:
-        token = profits[key]['profit_token']
-        if token in summarized_profits.keys():
-            summarized_profits[token] = summarized_profits[token] + profits[key]['profit_amount']
-        else:
-            summarized_profits[token] = profits[key]['profit_amount']
-    return summarized_profits
 
 
 async def convert_all_to_stablecoin(results):
@@ -258,24 +232,95 @@ async def convert_all_to_stablecoin(results):
 
     # lastly, convert our WBNB amount to BUSD:
     [_, _, busd] = await to_stablecoin("WBNB", converted_results["WBNB"], "BUSD")
+
     converted_results["BUSD"] = converted_results["BUSD"] + busd
     return converted_results["BUSD"]
 
 
 async def to_stablecoin(token, amount, stablecoin):
-    stable_coin_amount = None
+    stable_coin_amount = 0
 
     if token == stablecoin:
         stable_coin_amount = amount
     else:
-        [prices, _] = await get_trade_prices(token, stablecoin, amount)
+        prices = await get_trade_prices(token, stablecoin, amount)
         if len(prices) != 0:
             stable_coin_amount = max([r[3] for r in prices])
 
     return [token, stablecoin, stable_coin_amount]
 
 
-# +- 48s
+def summarize_profits(profits):
+    keys = profits.keys()
+
+    summarized_profits = {}
+    for key in keys:
+        if profits[key] is None:
+            continue
+        token = profits[key]['profit_token']
+        if token in summarized_profits.keys():
+            summarized_profits[token] = summarized_profits[token] + profits[key]['profit_amount']
+        else:
+            summarized_profits[token] = profits[key]['profit_amount']
+    return summarized_profits
+
+
+async def get_best_dex(symbol_in, symbol_out, amount=None):
+    """
+    Finds the DEX which offers the best trade for the given pair
+    @param amount:
+    @param symbol_in:
+    @param symbol_out:
+    @return:
+    """
+    results = await get_trade_prices(symbol_in, symbol_out, amount)
+    if len(results) == 0:
+        return None
+    highest_return = max([r[3] for r in results])
+    for r in results:
+        if r[3] == highest_return:
+            return r
+
+
+async def get_trade_profit(symbol_in, symbol_out):
+    best_buy_opportunity = await get_best_dex(symbol_in, symbol_out)
+    if best_buy_opportunity is None:
+        return None
+    table_in = tabulate(tabular_data=[best_buy_opportunity],
+                        headers=["DEX", "AMOUNT IN", "TOKEN IN", "AMOUNT OUT", "TOKEN OUT", "IN/OUT", "RESERVE_IN %",
+                                 "RESERVE_OUT %"])
+
+    best_sell_opportunity = await get_best_dex(symbol_out, symbol_in, best_buy_opportunity[3])
+    if best_sell_opportunity is None:
+        return None
+    table_out = tabulate(tabular_data=[best_sell_opportunity],
+                         headers=["DEX", "AMOUNT IN", "TOKEN IN", "AMOUNT OUT", "TOKEN OUT", "IN/OUT", "RESERVE_IN %",
+                                  "RESERVE_OUT %"])
+
+    # calculate profit
+    profit = int(Decimal(best_sell_opportunity[3]) - Decimal(best_buy_opportunity[1]))
+    normalized_profit = normalize(symbol_in, profit)
+    if profit > 0:
+        print(table_in)
+        print(table_out)
+        print('###')
+        print(f"Profit: {'%f' % normalized_profit}")
+        print(f'{symbol_in}')
+        print('###')
+
+        return {
+            "profit_amount": profit,
+            "profit_token": symbol_in,
+            "start_loan": best_buy_opportunity[3],
+            "buy_opportunity": best_buy_opportunity,
+            "sell_opportunity": best_sell_opportunity
+        }
+    else:
+        logger.info(
+            f'Tested {round(normalize(symbol_in, best_buy_opportunity[1]), 5):,} {symbol_in}_{symbol_out}: {round(normalized_profit, 5):,} {symbol_in} loss')
+        return None
+
+
 async def main():
     start_time = time.time()
     all_pairs = data_client.get_pairs().keys()
@@ -286,8 +331,13 @@ async def main():
         t0 = data_client.get_pairs()[pair]['token0']
         t1 = data_client.get_pairs()[pair]['token1']
         functions.append([get_trade_profit, t0, t1])
+        # break
 
     results = await execute_concurrently(functions, True)
+
+    latest_block_number = bsc_client.get_latest_block_number()
+
+    # write_results_to_csv(results, latest_block_number)
 
     summarized = summarize_profits(results)
     print(json.dumps(summarized, indent=4, default=str))

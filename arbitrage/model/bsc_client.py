@@ -17,6 +17,10 @@ class BscClient:
         abi = get_abi(address, cast_abi, cast, sleep)
         return self.__web3__.eth.contract(abi=abi, address=address)
 
+    def get_latest_block_number(self):
+        return self.__web3__.eth.block_number
+
+
     def get_pool(self, factory, pool_index):
         pass
 
