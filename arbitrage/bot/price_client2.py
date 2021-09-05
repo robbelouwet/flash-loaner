@@ -6,19 +6,13 @@ from decimal import Decimal
 from tabulate import tabulate
 from model.bsc_client import BscClient
 from model.data_client import DataClient
+from utils.csv_writer import write_results_to_csv
 from utils.globals import get_logger
 from utils.utils import run_in_executor, execute_concurrently
 
 logger = get_logger()
 bsc_client = BscClient.get_instance()
 data_client = DataClient.get_instance()
-
-
-def write_results_to_csv(results, block):
-    res_keys = results.keys()
-
-    for key in res_keys:
-        pass
 
 
 @run_in_executor
@@ -337,7 +331,7 @@ async def main():
 
     latest_block_number = bsc_client.get_latest_block_number()
 
-    # write_results_to_csv(results, latest_block_number)
+    write_results_to_csv(results, latest_block_number)
 
     summarized = summarize_profits(results)
     print(json.dumps(summarized, indent=4, default=str))
