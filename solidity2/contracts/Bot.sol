@@ -1,11 +1,17 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8;
+pragma solidity ^0.7;
+pragma abicoder v2;
 
 import {DexAnalyzer} from "./DexAnalyzer.sol";
-import {IUniswapV3FlashCallback} from "https://raw.githubusercontent.com/Uniswap/v3-core/main/contracts/interfaces/callback/IUniswapV3FlashCallback.sol";
-import {IUniswapV3Pool} from "https://raw.githubusercontent.com/Uniswap/v3-core/main/contracts/UniswapV3Pool.sol";
+import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
+import "@uniswap/v3-core/contracts/interfaces/callback/IUniswapV3FlashCallback.sol";
+import "@uniswap/v3-periphery/contracts/base/PeripheryPayments.sol";
+import "@uniswap/v3-core/contracts/libraries/LowGasSafeMath.sol";
 
-contract Bot is IUniswapV3FlashCallback {
+contract Bot is IUniswapV3FlashCallback, PeripheryPayments {
+    using LowGasSafeMath for uint256;
+    using LowGasSafeMath for int256;
+
     // contract owner
     address _owner;
     DexAnalyzer _dex_analyzer;
@@ -22,7 +28,15 @@ contract Bot is IUniswapV3FlashCallback {
     }
 
     //=========================================================================
-    constructor(address dex_analyzer) {
+    // - hoe deze params invullen? https://docs.uniswap.org/protocol/guides/flash-integrations/calling-flash
+    // - deploy en doe test run
+    // - debug: kan em al amount_out terug geven en vinden?
+    constructor(
+        address dex_analyzer,
+        ISwapRouter _swapRouter,
+        address _factory,
+        address _WETH9
+    ) PeripheryImmutableState(_factory, _WETH9) {
         _dex_analyzer = DexAnalyzer(dex_analyzer);
         _owner = msg.sender;
     }
@@ -40,9 +54,18 @@ contract Bot is IUniswapV3FlashCallback {
         )
     {
         // 1 mil
-        uint256 amount_in = 1000000**18;
+        uint256 amount_in = 1000000 * (10**18);
+
+        // find the best buy and sell dexes for the specified pair
         for (uint256 i = 0; i < _pools.length; i++) {
-            _dex_analyzer.analyzeDexes(amount_in, _pools[i][0], _pools[i][1]);
+            address best_buy_dex;
+            address best_sell_dex;
+
+            (best_buy_dex, best_sell_dex) = _dex_analyzer.analyzeDexes(
+                amount_in,
+                _pools[i][0],
+                _pools[i][1]
+            );
         }
     }
 
@@ -50,5 +73,5 @@ contract Bot is IUniswapV3FlashCallback {
         uint256 fee0,
         uint256 fee1,
         bytes calldata data
-    ) external {}
+    ) external override {}
 }
