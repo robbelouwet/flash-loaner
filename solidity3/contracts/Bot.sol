@@ -1,28 +1,17 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.7.5;
+pragma solidity ^0.8;
 pragma abicoder v2;
 
 import {FlashLoaner} from "./FlashLoaner.sol";
 import {DexAnalyzer} from "./DexAnalyzer.sol";
-import "./libs/v3-periphery/contracts/interfaces/ISwapRouter.sol";
-import "./libs/v3-periphery/contracts/interfaces/IQuoter.sol";
+import "../libs/v3-periphery/contracts/interfaces/ISwapRouter.sol";
+import "../libs/v3-periphery/contracts/interfaces/IQuoter.sol";
 
 contract Bot {
     // contract owner
     address _owner;
     FlashLoaner _loaner;
     DexAnalyzer _dex_analyzer;
-
-    // routers
-    string[] _routers_ids;
-    mapping(string => address) public _routers;
-
-    // quoters
-    string[] _quoters_ids;
-    mapping(string => address) public _quoters;
-
-    // array of (token0, token1) token pairs present on at least 2 of our DEX's
-    address[][2] _pools;
 
     modifier isOwner() {
         require(msg.sender == _owner);
@@ -37,17 +26,6 @@ contract Bot {
         _dex_analyzer = DexAnalyzer(dex_analyzer);
 
         _owner = msg.sender;
-
-        _routers_ids.push("uniswap_v3");
-        _router_ids.push("sushiswap");
-        _router_ids.push("uniswap_v2");
-        _routers["uniswap_v3"] = 0xE592427A0AEce92De3Edee1F18E0157C05861564;
-        _routers["uniswap_v2"] = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
-        _routers["sushiswap"] = 0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F;
-        _routers[""] = ;
-
-        _quoters_ids.push("uniswap");
-        _quoters["uniswap"] = 0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6;
     }
 
     //=========================================================================

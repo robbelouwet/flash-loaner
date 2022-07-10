@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.7;
+pragma solidity ^0.8;
 pragma abicoder v2;
 
-import "./libs/v3-core/contracts/interfaces/callback/IUniswapV3FlashCallback.sol";
-import "./libs/v3-core/contracts/libraries/LowGasSafeMath.sol";
+import "../libs/v3-core/contracts/interfaces/callback/IUniswapV3FlashCallback.sol";
+import "../libs/v3-core/contracts/libraries/LowGasSafeMath.sol";
 
-import "./libs/v3-periphery/contracts/base/PeripheryPayments.sol";
-import "./libs/v3-periphery/contracts/base/PeripheryImmutableState.sol";
-import "./libs/v3-periphery/contracts/libraries/PoolAddress.sol";
-import "./libs/CallbackValidation.sol";
-import "./libs/v3-periphery/contracts/libraries/TransferHelper.sol";
-import "./libs/v3-periphery/contracts/interfaces/ISwapRouter.sol";
+import "../libs/v3-periphery/contracts/base/PeripheryPayments.sol";
+import "../libs/v3-periphery/contracts/base/PeripheryImmutableState.sol";
+import "../libs/v3-periphery/contracts/libraries/PoolAddress.sol";
+import "../libs/CallbackValidation.sol";
+import "../libs/v3-periphery/contracts/libraries/TransferHelper.sol";
+import "../libs/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 
 contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
     address _owner;
