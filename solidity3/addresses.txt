@@ -1,0 +1,2 @@
+sushiswap
+    usdc-weth pool: 0x397FF1542f962076d0BFE58eA045FfA2d347ACa0

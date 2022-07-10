@@ -1,12 +1,14 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
+const fs = require("fs")
 
 const Web3 = require("web3");
 const web3 = new Web3();
 
 describe("Greeter", function () {
   let bot;
-  it("Deployed", async function () {
+  let dexAnalyzer;
+  it("Deployed Bot", async function () {
     const FlashLoaner = await hre.ethers.getContractFactory("FlashLoaner");
     const flash_loaner = await FlashLoaner.deploy(
       web3.utils.toChecksumAddress('0xE592427A0AEce92De3Edee1F18E0157C05861564'), // SwapRouter, all nets
@@ -31,4 +33,15 @@ describe("Greeter", function () {
     const _tx = await bot.findArbitrage();
     console.log(_tx.tx)
   });
+
+  it("Deployed DexAnalyzer", async () => {
+    const DexAnalyzer = await hre.ethers.getContractFactory("DexAnalyzer");
+    dexAnalyzer = await DexAnalyzer.deploy()
+  })
+
+  it("Common pairs", async () => {
+    const pools = JSON.parse(fs.readFileSync("../../token_scraper/pools/common.json"))
+
+    _tx = await dexAnalyzer.saveCommonPairs(pools);
+  })
 });

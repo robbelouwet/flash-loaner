@@ -1,15 +1,17 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.7;
+pragma solidity >=0.7.5;
 pragma abicoder v2;
 
 import {FlashLoaner} from "./FlashLoaner.sol";
-import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
-import "@uniswap/v3-periphery/contracts/interfaces/IQuoter.sol";
+import {DexAnalyzer} from "./DexAnalyzer.sol";
+import "./libs/v3-periphery/contracts/interfaces/ISwapRouter.sol";
+import "./libs/v3-periphery/contracts/interfaces/IQuoter.sol";
 
 contract Bot {
     // contract owner
     address _owner;
     FlashLoaner _loaner;
+    DexAnalyzer _dex_analyzer;
 
     // routers
     string[] _routers_ids;
@@ -30,12 +32,19 @@ contract Bot {
     //=========================================================================
     // - deploy en doe test run
     // - debug: kan em al amount_out terug geven en vinden?
-    constructor(address payable flash_loaner) {
+    constructor(address payable flash_loaner, address dex_analyzer) {
         _loaner = FlashLoaner(flash_loaner);
+        _dex_analyzer = DexAnalyzer(dex_analyzer);
+
         _owner = msg.sender;
 
-        _routers_ids.push("uniswap");
-        _routers["uniswap"] = 0xE592427A0AEce92De3Edee1F18E0157C05861564;
+        _routers_ids.push("uniswap_v3");
+        _router_ids.push("sushiswap");
+        _router_ids.push("uniswap_v2");
+        _routers["uniswap_v3"] = 0xE592427A0AEce92De3Edee1F18E0157C05861564;
+        _routers["uniswap_v2"] = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
+        _routers["sushiswap"] = 0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F;
+        _routers[""] = ;
 
         _quoters_ids.push("uniswap");
         _quoters["uniswap"] = 0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6;
@@ -60,7 +69,6 @@ contract Bot {
         uint256 amount1;
         uint24 fee2;
         uint24 fee3;
-        */
         uint256 amount_in;
         uint256 due_fee;
         (amount_in, due_fee) = _loaner.loan(
@@ -76,7 +84,7 @@ contract Bot {
         );
 
         // find the best buy and sell dexes for the specified pair
-        /*for (uint256 i = 0; i < _pools.length; i++) {
+        for (uint256 i = 0; i < _pools.length; i++) {
             address best_buy_dex;
             address best_sell_dex;
 
@@ -91,39 +99,5 @@ contract Bot {
         token_out = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
         dex_buy = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
         dex_sell = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
-    }
-
-    function analyzeDexes(
-        uint256 amount_in,
-        address token_in,
-        address token_out
-    ) public returns (address best_buy_dex, address best_sell_dex) {
-        // keep track of the best arb opportunity
-        // while analyzing dexes
-        uint256 highest_amount_out = 0;
-        uint256 lowest_amount_out = 2**255; // some amount close to 'inf'
-
-        for (uint256 i = 0; i < _quoters_ids.length; i++) {
-            // the juicy boi (not gas efficient):
-            uint256 am = IQuoter(_quoters[_quoters_ids[i]])
-                .quoteExactInputSingle(
-                    token_in,
-                    token_out,
-                    100, // fee, 0.1 %
-                    amount_in,
-                    0
-                );
-            // is this a good buy DEX? Give little t_in, receive alot t_out?
-            if (am > highest_amount_out) {
-                highest_amount_out = am;
-                best_buy_dex = _routers[_routers_ids[i]];
-            }
-
-            // is this a good sell DEX? Sell little t_out, get alot of t_in
-            if (am < lowest_amount_out) {
-                lowest_amount_out = am;
-                best_sell_dex = _routers[_routers_ids[i]];
-            }
-        }
     }
 }
