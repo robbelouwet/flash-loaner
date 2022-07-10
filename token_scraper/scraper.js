@@ -162,7 +162,7 @@ const hasV2Pair = async (value, v2_factory) => {
 const hasV3Pool = async (value, v3_factory) => {
 
     let v3_pools = [];
-    for (fee of [100, 3000, 5000]) {
+    for (fee of [100, 500, 1000, 3000, 10000]) { // every fee tier according to uniswap v3 docs
         const pool_adr = await v3_factory.methods.getPool(
             web3.utils.toChecksumAddress(value["token0"]),
             web3.utils.toChecksumAddress(value["token1"]),
