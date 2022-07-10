@@ -52,6 +52,10 @@ contract DexAnalyzer {
         }
     }
 
+    function getCommonPairsLength() public view returns (uint256) {
+        return _common_pools.length;
+    }
+
     function analyzeDexes(
         uint256 amount_in,
         address token_in,

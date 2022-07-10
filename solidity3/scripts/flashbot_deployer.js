@@ -6,6 +6,7 @@
 const hre = require("hardhat");
 const Web3 = require("web3");
 const web3 = new Web3();
+const fs = require("fs")
 
 async function main() {
     // Hardhat always runs the compile task when running scripts with its command
@@ -15,7 +16,7 @@ async function main() {
     // manually to make sure everything is compiled
     // await hre.run('compile');
 
-    // We get the contract to deploy
+    // FlashLoaner.sol
     const FlashLoaner = await hre.ethers.getContractFactory("FlashLoaner");
     const flash_loaner = await FlashLoaner.deploy(
         web3.utils.toChecksumAddress('0xE592427A0AEce92De3Edee1F18E0157C05861564'), // SwapRouter, all nets
@@ -26,9 +27,18 @@ async function main() {
     )
     const deployed_loaner = await flash_loaner.deployed();
 
+    // DexAnalyzer.sol
+    const DexAnalyzer = await hre.ethers.getContractFactory("DexAnalyzer");
+    const dexAnalyzer = await DexAnalyzer.deploy()
+    const pools = JSON.parse(fs.readFileSync("./common.json"))
+    await dexAnalyzer.saveCommonPairs(pools);
+    const deployed_analyzer = await dexAnalyzer.deployed()
+
+
     const Bot = await hre.ethers.getContractFactory("Bot");
     const bot = await Bot.deploy(
-        deployed_loaner.address
+        deployed_loaner.address,
+        deployed_analyzer.address
     )
     await bot.deployed()
     console.log("Bot deployed at: ", bot.address);
