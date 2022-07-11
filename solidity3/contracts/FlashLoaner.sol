@@ -3,6 +3,7 @@ pragma solidity ^0.8;
 pragma abicoder v2;
 
 import "../libs/v3-core/contracts/interfaces/callback/IUniswapV3FlashCallback.sol";
+import "../libs/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
 import "../libs/v3-core/contracts/libraries/LowGasSafeMath.sol";
 
 import "../libs/v3-periphery/contracts/base/PeripheryPayments.sol";
@@ -14,6 +15,7 @@ import "../libs/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 
 contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
     address _owner;
+
     modifier isOwner() {
         require(msg.sender == _owner);
         _;
@@ -25,8 +27,6 @@ contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
         uint24 fee1;
         uint256 amount0;
         uint256 amount1;
-        uint24 fee2;
-        uint24 fee3;
     }
 
     struct FlashCallbackData {
@@ -53,40 +53,18 @@ contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
         _owner = msg.sender;
     }
 
-    function loan(FlashParams memory params)
-        public
-        returns (uint256 loaned_amount, uint256 due_fee)
-    {
-        FlashParams memory p = params;
-        PoolAddress.PoolKey memory poolKey = PoolAddress.PoolKey(
-            params.token0,
-            params.token1,
-            params.fee1
-        );
+    function internalCallback() internal {
+        // find the best buy and sell dexes for the specified pair
+        for (uint256 i = 0; i < _common_pairs.length; i++) {
+            string memory best_buy_dex;
+            string memory best_sell_dex;
 
-        address testadr = PoolAddress.computeAddress(factory, poolKey);
-
-        IUniswapV3Pool pool = IUniswapV3Pool(
-            PoolAddress.computeAddress(factory, poolKey)
-        );
-
-        pool.flash(
-            address(this),
-            params.amount0,
-            params.amount1,
-            abi.encode(
-                FlashCallbackData({
-                    amount0: params.amount0,
-                    amount1: params.amount1,
-                    payer: msg.sender,
-                    poolKey: poolKey,
-                    poolFee2: params.fee2,
-                    poolFee3: params.fee3
-                })
-            )
-        );
-        loaned_amount = 1000;
-        due_fee = 1;
+            (best_buy_dex, best_sell_dex) = _dex_analyzer.analyzeDexes(
+                calculateOptimalAmountIn(_common_pairs[i]),
+                _common_pairs[i].token0,
+                _common_pairs[i].token1
+            );
+        }
     }
 
     function uniswapV3FlashCallback(
@@ -94,6 +72,7 @@ contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
         uint256 fee1,
         bytes calldata data
     ) external override {
+        internalCallback();
         FlashCallbackData memory decoded = abi.decode(
             data,
             (FlashCallbackData)
@@ -108,21 +87,19 @@ contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
             address(_swap_router),
             decoded.amount0
         );
-        TransferHelper.safeApprove(
-            token1,
-            address(_swap_router),
-            decoded.amount1
-        );
+        // TransferHelper.safeApprove(
+        //     token1,
+        //     address(_swap_router),
+        //     decoded.amount1
+        // );
 
         // profitable check
         // exactInputSingle will fail if this amount not met
-        uint256 amount1Min = LowGasSafeMath.add(decoded.amount1, fee1);
         uint256 amount0Min = LowGasSafeMath.add(decoded.amount0, fee0);
-
-        uint256 appel = 1;
+        //uint256 amount1Min = LowGasSafeMath.add(decoded.amount1, fee1);
 
         // call exactInputSingle for swapping token1 for token0 in pool w/fee2
-        /*uint256 amountOut0 = _swap_router.exactInputSingle(
+        uint256 amountOut0 = _swap_router.exactInputSingle(
             ISwapRouter.ExactInputSingleParams({
                 tokenIn: token1,
                 tokenOut: token0,
@@ -134,7 +111,7 @@ contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
                 sqrtPriceLimitX96: 0
             })
         );
-
+        /*
         // call exactInputSingle for swapping token0 for token 1 in pool w/fee3
         uint256 amountOut1 = _swap_router.exactInputSingle(
             ISwapRouter.ExactInputSingleParams({

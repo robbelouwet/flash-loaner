@@ -1,5 +1,5 @@
 library Libs {
-    struct Pool {
+    struct Pair {
         address token0;
         address token1;
         address uniswap_v3_100;

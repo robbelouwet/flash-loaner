@@ -3,9 +3,7 @@ pragma solidity ^0.8;
 pragma abicoder v2;
 
 import "../libs/Strings.sol";
-
 import "../libs/v3-periphery/contracts/interfaces/ISwapRouter.sol";
-import "../libs/v3-periphery/contracts/interfaces/IQuoter.sol";
 import "../libs/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 import "../libs/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
 import "../libs/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
@@ -18,9 +16,6 @@ contract DexAnalyzer {
 
     // name of the dexes: uniswap_v3, uniswap_v2, sushiswap
     string[] _dex_ids;
-
-    // a list of Libs.Pool structs the signify a pair of ERC20 tokens available to swap on which DEX's
-    Libs.Pool[] _common_pools;
 
     // routers
     mapping(string => address) public _routers;
@@ -46,21 +41,10 @@ contract DexAnalyzer {
         _uniswap_v3_quoter = 0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6;
     }
 
-    function saveCommonPairs(Libs.Pool[] memory pools) public {
-        for (uint256 i = 0; i < pools.length; i++) {
-            _common_pools.push(pools[i]);
-        }
-    }
-
-    function getCommonPairsLength() public view returns (uint256) {
-        return _common_pools.length;
-    }
-
-    function analyzeDexes(
-        uint256 amount_in,
-        address token_in,
-        address token_out
-    ) public returns (string memory best_buy_dex, string memory best_sell_dex) {
+    function analyzeDexes(uint256 amount_in, Libs.Pair memory pair)
+        public
+        returns (string memory best_buy_dex, string memory best_sell_dex)
+    {
         // keep track of the best arb opportunity
         // while analyzing dexes
         uint256 highest_amount_out = 0;
@@ -68,12 +52,7 @@ contract DexAnalyzer {
 
         for (uint256 i = 0; i < _dex_ids.length; i++) {
             // the juicy boi (not gas efficient):
-            uint256 am = getArbAmountOut(
-                amount_in,
-                token_in,
-                token_out,
-                _dex_ids[i]
-            );
+            uint256 am = getAmountOut(amount_in, pair);
             // is this a good buy DEX? Give little t_in, receive alot t_out?
             if (am > highest_amount_out) {
                 highest_amount_out = am;
@@ -88,41 +67,45 @@ contract DexAnalyzer {
         }
     }
 
-    function getArbAmountOut(
-        uint256 amount_in,
-        address token_in,
-        address token_out,
-        string memory dex_id
-    ) public returns (uint256) {
-        if (
-            keccak256(abi.encodePacked(dex_id)) ==
-            keccak256(abi.encodePacked("uniswap"))
-        )
-            return
-                IQuoter(_uniswap_v3_quoter).quoteExactInputSingle(
-                    token_in,
-                    token_out,
-                    100, // fee, 0.1 %
-                    amount_in,
-                    0
-                );
-        if (
-            keccak256(abi.encodePacked(dex_id)) ==
-            keccak256(abi.encodePacked("sushiswap"))
-        ) {
-            IUniswapV2Router02 router = IUniswapV2Router02(_routers[dex_id]);
-            address pool = IUniswapV2Factory(
-                IUniswapV2Router02(_routers[dex_id]).factory()
-            ).getPair(token_in, token_out);
+    function getAmountOut(uint256 amount_in, Libs.Pair memory pair)
+        public
+        returns (uint256)
+    {
+        // uniswap V3, 0.01% fee
+        if (pair.uniswap_v3_100 != address(0x0)) checkUniswapV3AmountOut(100);
 
-            uint112 _reserve0;
-            uint112 _reserve1;
-            uint32 _blockTimestampLast;
+        // uniswap V3, 0.5% fee
+        if (pair.uniswap_v3_500 != address(0x0)) checkUniswapV3AmountOut(500);
 
-            (_reserve0, _reserve1, _blockTimestampLast) = IUniswapV2Pair(pool)
-                .getReserves();
+        // uniswap V3, 0.3% fee
+        if (pair.uniswap_v3_3000 != address(0x0)) checkUniswapV3AmountOut(3000);
 
-            return router.getAmountOut(amount_in, _reserve0, _reserve1);
-        }
+        // uniswap V3, 1% fee
+        if (pair.uniswap_v3_10000 != address(0x0))
+            checkUniswapV3AmountOut(10000);
+
+        // uniswap V2
+        if (pair.uniswap_v2 != address(0x0)) checkUniswapV2AmountOut();
+
+        // sushiswap
+        if (pair.uniswap_v3_100 != address(0x0)) checkUniswapV2AmountOut();
     }
+
+    function checkUniswapV3AmountOut(uint256 fee)
+        public
+        view
+        returns (uint256)
+    {
+        ISwapRouter.ExactInputSingleParams memory params = ISwapRouter.ExactInputSingleParams(
+
+        );
+        try ISwapRouter(_routers["uniswap_v3"]).exactInputSingle(params)
+            returns (uint amount_out) {
+            
+        } catch Error(string memory reason) {
+
+        };
+    }
+
+    function checkUniswapV2AmountOut() public view returns (uint256) {}
 }

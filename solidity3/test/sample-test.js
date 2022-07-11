@@ -43,7 +43,7 @@ describe("FlashBot", function () {
         const DexAnalyzer = await hre.ethers.getContractFactory("DexAnalyzer");
         dexAnalyzer = await DexAnalyzer.deploy()
 
-        const pools = JSON.parse(fs.readFileSync("./common.json"))
+        const pools = JSON.parse(fs.readFileSync("./unduped_common.json"))
 
         const _tx = await dexAnalyzer.saveCommonPairs(pools);
 
