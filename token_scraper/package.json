@@ -16,6 +16,7 @@
     "@uniswap/v3-periphery": "^1.4.1",
     "dotenv": "^16.0.1",
     "hardhat": "^2.10.0",
+    "solidity-string-utils": "^0.0.7",
     "web3": "^1.7.4"
   },
   "devDependencies": {

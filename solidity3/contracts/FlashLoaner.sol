@@ -12,30 +12,17 @@ import "../libs/v3-periphery/contracts/libraries/PoolAddress.sol";
 import "../libs/CallbackValidation.sol";
 import "../libs/v3-periphery/contracts/libraries/TransferHelper.sol";
 import "../libs/v3-periphery/contracts/interfaces/ISwapRouter.sol";
+import "./DexAnalyzer.sol";
+import "./Structs.sol";
 
 contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
     address _owner;
 
+    DexAnalyzer _dex_analyzer;
+
     modifier isOwner() {
         require(msg.sender == _owner);
         _;
-    }
-
-    struct FlashParams {
-        address token0;
-        address token1;
-        uint24 fee1;
-        uint256 amount0;
-        uint256 amount1;
-    }
-
-    struct FlashCallbackData {
-        uint256 amount0;
-        uint256 amount1;
-        address payer;
-        PoolAddress.PoolKey poolKey;
-        uint24 poolFee2;
-        uint24 poolFee3;
     }
 
     using LowGasSafeMath for uint256;
@@ -46,25 +33,77 @@ contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
 
     constructor(
         ISwapRouter _swapRouter,
+        address dex_analyzer,
         address _factory,
         address _WETH9
     ) PeripheryImmutableState(_factory, _WETH9) {
+        _dex_analyzer = DexAnalyzer(dex_analyzer);
         _swap_router = ISwapRouter(_swapRouter);
         _owner = msg.sender;
     }
 
-    function internalCallback() internal {
-        // find the best buy and sell dexes for the specified pair
-        for (uint256 i = 0; i < _common_pairs.length; i++) {
-            string memory best_buy_dex;
-            string memory best_sell_dex;
+    // 1) fix loan, zie lucid
+    // 2) test DexAnalyzer::getMaxOutPool
+    // 3) implementeer DexAnalyzer::getMinInPool
+    //
 
-            (best_buy_dex, best_sell_dex) = _dex_analyzer.analyzeDexes(
-                calculateOptimalAmountIn(_common_pairs[i]),
-                _common_pairs[i].token0,
-                _common_pairs[i].token1
-            );
-        }
+    /// Analyze a given pair of ERC20 tokens, and see if there's an arbitrage opportunity
+    /// among our known DEX's.
+    ///
+    /// performs a swap. If specified, fails on purpose in order to revert and see if the trade would have been profitable
+    function analyzePair(Libs.Pair memory pair, bool __revert) public {
+        address token0 = pair.token0 > pair.token1 ? pair.token1 : pair.token0;
+        address token1 = pair.token0 < pair.token1 ? pair.token1 : pair.token0;
+
+        (amount_in, due_fee) = _loaner.loan(
+            FlashLoaner.FlashParams(
+                // e.g.: DAI
+                token0,
+                // e.g.: USDC
+                token1,
+                // fee, e.g.: 0.1 %
+                _amount_calculator.calculateFee(pair),
+                // amount of token0 tokens to loan
+                _amount_calculator.calculateAmount(pair),
+                // amount of token1 tokens to loan
+                0
+            )
+        );
+
+        PoolAddress.PoolKey memory poolKey = PoolAddress.PoolKey(
+            params.token0,
+            params.token1,
+            params.fee1
+        );
+
+        IUniswapV3Pool pool = IUniswapV3Pool(
+            PoolAddress.computeAddress(factory, poolKey)
+        );
+
+        pool.flash(
+            address(this), // FlashLoaner's callback needs to be triggered, not the bot
+            params.amount0,
+            params.amount1,
+            abi.encode(
+                FlashCallbackData({
+                    pair: pair,
+                    amount0: params.amount0,
+                    amount1: params.amount1,
+                    payer: msg.sender,
+                    poolKey: poolKey,
+                    poolFee2: params.fee2,
+                    poolFee3: params.fee3
+                })
+            )
+        );
+
+        require(1 == 2); // trigger a revert
+    }
+
+    function internalFlashCallback(Libs.FlashCallbackData memory cbdata)
+        internal
+    {
+        (best_buy_dex, best_sell_dex) = _dex_analyzer.analyzeDexes(cbdata);
     }
 
     function uniswapV3FlashCallback(
@@ -72,12 +111,15 @@ contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
         uint256 fee1,
         bytes calldata data
     ) external override {
-        internalCallback();
-        FlashCallbackData memory decoded = abi.decode(
+        Libs.FlashCallbackData memory decoded = abi.decode(
             data,
-            (FlashCallbackData)
+            (Libs.FlashCallbackData)
         );
         CallbackValidation.verifyCallback(factory, decoded.poolKey);
+
+        ///============================================
+        internalFlashCallback(decoded.pair); // swap with loaned tokens
+        ///============================================
 
         address token0 = decoded.poolKey.token0;
         address token1 = decoded.poolKey.token1;

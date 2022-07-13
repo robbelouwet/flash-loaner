@@ -1,21 +1,26 @@
 const { assert } = require("chai");
-const DexAnalyzer = artifacts.require("DexAnalyzer");
+const Bot = artifacts.require("Bot");
 require("dotenv").config();
 
 require("chai").use(require("chai-as-promised")).should();
 
-contract("DexAnalyzer", _ => {
-    let analyzer;
+contract("Bot", _ => {
+    let bot;
 
     describe("Deployment", async () => {
-        it("DexAnalyzer deployed successfully", async () => {
-            analyzer = await DexAnalyzer.deployed();
+        it("Bot deployed successfully", async () => {
+            bot = await Bot.deployed();
             //console.log(collectible);
-            const address = analyzer.address;
+            const address = bot.address;
             assert.notEqual(address, "");
             assert.notEqual(address, 0x0);
             assert.notEqual(address, null);
             assert.notEqual(address, undefined);
+        });
+
+        it("Loan and pay back", async () => {
+            const _tx = await bot.findArbitrage();
+            console.log(_tx.tx)
         });
     });
 })

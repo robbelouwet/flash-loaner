@@ -106,44 +106,53 @@ const findCommonPairs = async () => {
     const v3_factory = getUniswapV3Factory()
     const sushi_factory = getSushiSwapFactory()
 
-    const uniswap_v3_pools = JSON.parse(fs.readFileSync("./pools/uniswap_v3/popular_pools.json"))
+    const uniswap_v3_pools = JSON.parse(fs.readFileSync("./pools/sushiswap/sushiswap_allPairs.json"))
 
-    let all_common_pairs = {}
+    let all_common_pairs = []
 
     let counter = 0
     for (const [uniswap_v3_pool, value] of Object.entries(uniswap_v3_pools)) {
-        console.log(`Comparing ${value.token0}-${value.token1}`)
-        if (counter >= 50) break
-        counter++
+        console.log(`${counter}/${Object.entries(uniswap_v3_pools).length}Comparing ${value.token0}-${value.token1}`)
+        if (counter++ % 50 == 0) {
+            fs.writeFileSync("./pools/common.json", JSON.stringify(all_common_pairs))
+            console.log("reached checkpoint")
+        }
 
-        let common_pairs = {}
-        // see if uniswap V3 has a pool for this pair
+        let hits = 0;
+
+        let common_pair = {}
+        common_pair["token0"] = value.token0
+        common_pair["token1"] = value.token1
+        // Uniswap V3 (for every fee tier)
         // returns [...[pool_adr, fee]...] (multiple pools because of fee tiers)
         const v3_pools = await hasV3Pool(value, v3_factory)
-
         v3_pools.forEach(pool => {
-            if (common_pairs["uniswap_v3"] == undefined)
-                common_pairs["uniswap_v3"] = {}
-            common_pairs["uniswap_v3"][pool[1]] = pool[0]
+            common_pair[`uniswap_v3_${pool[1]}`] = pool[0]
+            hits++
         }
 
         );
 
-        // see if uniswap V2 has this pair
+        // uniswap V2
         const v2_pair = await hasV2Pair(value, v2_factory)
         if (v2_pair != undefined) {
-            common_pairs["uniswap_v2"] = v2_pair
+            common_pair["uniswap_v2"] = v2_pair
+            hits++;
         }
 
-        // see if sushiswap has this pair
+        // sushiswap
         const sushi_pair = await hasV2Pair(value, sushi_factory)
         if (v2_pair != undefined) {
-            common_pairs["sushiswap"] = sushi_pair
+            common_pair["sushiswap"] = sushi_pair
+            hits++;
         }
 
-        all_common_pairs[`${value.token0}-${value.token1}`] = common_pairs
+        // only worth saving if at least 2 dexes offer this pair
+        if (hits >= 2)
+            all_common_pairs.push(common_pair);
 
     }
+
 
     fs.writeFileSync("./pools/common.json", JSON.stringify(all_common_pairs))
 }
@@ -154,9 +163,7 @@ const hasV2Pair = async (value, v2_factory) => {
         web3.utils.toChecksumAddress(value["token1"]),
     ).call()
 
-    return !web3.utils.toBN(pair_adr).isZero() ?
-        pair_adr :
-        undefined
+    return pair_adr
 }
 
 const hasV3Pool = async (value, v3_factory) => {
@@ -170,9 +177,9 @@ const hasV3Pool = async (value, v3_factory) => {
         ).call()
 
 
-        if (!web3.utils.toBN(pool_adr).isZero()) {
-            v3_pools.push([pool_adr, fee])
-        }
+        //if (!web3.utils.toBN(pool_adr).isZero()) {
+        v3_pools.push([pool_adr, fee])
+        //}
     }
 
     return v3_pools

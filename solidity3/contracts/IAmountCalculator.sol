@@ -2,11 +2,16 @@
 pragma solidity ^0.8;
 pragma abicoder v2;
 
-import "../libs/PairLibs.sol";
+import "./Structs.sol";
 
 interface IAmountCalculator {
     /// returns the amount_in to trade, in wei!
-    function calculate(Libs.Pair memory pair)
+    function calculateAmount(Libs.Pair memory pair)
+        external
+        view
+        returns (uint256 amount);
+
+    function calculateFee(Libs.Pair memory pair)
         external
         view
         returns (uint256 amount);
@@ -15,7 +20,7 @@ interface IAmountCalculator {
 contract TestAmountCalculator is IAmountCalculator {
     /// returns 1000 tokens
     /// @inheritdoc IAmountCalculator
-    function calculate(Libs.Pair memory pair)
+    function calculateAmount(Libs.Pair memory pair)
         public
         view
         override
@@ -24,18 +29,42 @@ contract TestAmountCalculator is IAmountCalculator {
         /// just return 1000 tokens
         return 1000 * (10**18);
     }
+
+    /// returns 1000 tokens
+    /// @inheritdoc IAmountCalculator
+    function calculateFee(Libs.Pair memory pair)
+        public
+        view
+        override
+        returns (uint256 amount)
+    {
+        /// just return 1000 tokens
+        return 100;
+    }
 }
 
 contract NaiveAmountCalculator is IAmountCalculator {
     /// TODO
     /// 10 percent of the smallest reserve
     /// @inheritdoc IAmountCalculator
-    function calculate(Libs.Pair memory pair)
+    function calculateAmount(Libs.Pair memory pair)
         public
         view
         override
         returns (uint256 amount)
     {}
+
+    /// returns 1000 tokens
+    /// @inheritdoc IAmountCalculator
+    function calculateFee(Libs.Pair memory pair)
+        public
+        view
+        override
+        returns (uint256 amount)
+    {
+        /// just return 1000 tokens
+        return 100;
+    }
 }
 
 contract EstimatedAmountCalculator is IAmountCalculator {
@@ -47,10 +76,22 @@ contract EstimatedAmountCalculator is IAmountCalculator {
     ///          token0          >   eth +   token0   +   token0   +    token1    +    token1  +    token0
     /// if gains is positive, we have a winner
     /// @inheritdoc IAmountCalculator
-    function calculate(Libs.Pair memory pair)
+    function calculateAmount(Libs.Pair memory pair)
         public
         view
         override
         returns (uint256 amount)
     {}
+
+    /// returns 1000 tokens
+    /// @inheritdoc IAmountCalculator
+    function calculateFee(Libs.Pair memory pair)
+        public
+        view
+        override
+        returns (uint256 amount)
+    {
+        /// just return 1000 tokens
+        return 100;
+    }
 }
