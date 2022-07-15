@@ -50,4 +50,38 @@ describe("FlashBot", function () {
         const res = await dexAnalyzer.getCommonPairsLength();
         console.log(res)
     })
+
+    it("DexHandler test", async () => {
+        const DexHandler = await hre.ethers.getContractFactory("DexHandler");
+        const dex_handler = await DexHandler.deploy()
+
+        //console.log("DexHandler at: ", dex_handler.address);
+
+        const DexAnalyzer = await hre.ethers.getContractFactory("contracts2/DexAnalyzer.sol:DexAnalyzer");
+        const dex_analyzer = await DexAnalyzer.deploy(
+            web3.utils.toChecksumAddress(dex_handler.address)
+        )
+        await dex_analyzer.deployed()
+
+        //console.log("DexAnalyzer at: ", dex_analyzer.address)
+
+        const _tx = await dex_analyzer.peekUniswapV3Swap(
+            "0x853d955aCEf822Db058eb8505911ED77F175b99e",
+            "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+            100,
+            {
+                token0: "0x853d955aCEf822Db058eb8505911ED77F175b99e",
+                token1: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                uniswap_v3_100: "0x9A834b70C07C81a9fcD6F22E842BF002fBfFbe4D",
+                uniswap_v3_500: "0xc63B0708E2F7e69CB8A1df0e1389A98C35A76D52",
+                uniswap_v3_1000: "0x0000000000000000000000000000000000000000",
+                uniswap_v3_3000: "0x10581399A549DBfffDbD9B070a0bA2f9F61620D2",
+                uniswap_v3_10000: "0x0000000000000000000000000000000000000000",
+                uniswap_v2: "0x97C4adc5d28A86f9470C70DD91Dc6CC2f20d2d4D",
+                sushiswap: "0x0000000000000000000000000000000000000000"
+            },
+            100
+        )
+        await _tx.wait();
+    })
 });

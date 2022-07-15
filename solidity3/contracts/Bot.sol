@@ -9,11 +9,8 @@ import "../libs/v3-periphery/contracts/interfaces/IQuoter.sol";
 import "./Structs.sol";
 import "./IAmountCalculator.sol";
 import "hardhat/console.sol";
-import "solidity-string-utils/StringUtils.sol";
 
 contract Bot {
-    using strings for *;
-
     // contract owner
     address _owner;
     FlashLoaner _loaner;

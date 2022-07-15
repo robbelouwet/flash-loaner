@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8;
+pragma solidity 0.8.4;
 pragma abicoder v2;
 
 import "../libs/Strings.sol";
@@ -11,11 +11,11 @@ import "../libs/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 import "../libs/v3-core/contracts/libraries/LowGasSafeMath.sol";
 import "./Structs.sol";
 
-contract DexHandler {
-    // used to carry over state between a failing require() and entering the catch block
-    string public _revert_value_id;
-    bytes public _revert_value;
+/// Reports the result of a reverted swap() call because it ran in 'test mode'
+/// @param amount the amount of tokens we would've gotton back from this trade
+error TradeResult(uint256 amount);
 
+contract DexHandler {
     // name of the dexes: uniswap_v3, uniswap_v2, sushiswap
     string[] _dex_ids;
 
@@ -33,10 +33,10 @@ contract DexHandler {
     }
 
     function uniswapV3AmountOut(
-        Libs.FlashCallbackData memory cbdata,
         address token_in,
         address token_out,
         uint256 amount_in,
+        Structs.Pair memory pair,
         uint24 fee,
         bool test_revert
     ) external returns (uint256 amount) {
@@ -53,15 +53,11 @@ contract DexHandler {
             });
 
         amount = ISwapRouter(_routers["uniswap_v3"]).exactInputSingle(params);
-        if (test_revert) {
-            _revert_value_id = "DexHandler::uniswapV3AmountOut";
-            _revert_value = abi.encode(amount);
-            require(1 == 2);
-        }
+        if (test_revert) revert TradeResult(amount);
     }
 
     function uniswapV2AmountOut(
-        Libs.FlashCallbackData memory cbdata,
+        Structs.Pair memory pair,
         address token_in,
         address token_out,
         uint256 amount_in,
@@ -73,7 +69,7 @@ contract DexHandler {
         );
 
         IUniswapV2Pair pair = IUniswapV2Pair(
-            sushiswap ? cbdata.pair.sushiswap : cbdata.pair.uniswap_v2
+            sushiswap ? pair.sushiswap : pair.uniswap_v2
         );
 
         uint112 reserve_in;
@@ -81,12 +77,8 @@ contract DexHandler {
         uint32 _block;
         (reserve_in, reserve_out, _block) = pair.getReserves();
 
-        amount = r.quote(amount_in, reserve_in, reserve_out);
+        amount = 257; //amount = r.quote(amount_in, reserve_in, reserve_out);
 
-        if (test_revert) {
-            _revert_value_id = "DexHandler::uniswapV2AmountOut";
-            _revert_value = abi.encode(amount);
-            require(1 == 2);
-        }
+        if (test_revert) revert TradeResult(amount);
     }
 }

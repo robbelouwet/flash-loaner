@@ -42,11 +42,6 @@ contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
         _owner = msg.sender;
     }
 
-    // 1) fix loan, zie lucid
-    // 2) test DexAnalyzer::getMaxOutPool
-    // 3) implementeer DexAnalyzer::getMinInPool
-    //
-
     /// Analyze a given pair of ERC20 tokens, and see if there's an arbitrage opportunity
     /// among our known DEX's.
     ///
@@ -103,7 +98,11 @@ contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
     function internalFlashCallback(Libs.FlashCallbackData memory cbdata)
         internal
     {
-        (best_buy_dex, best_sell_dex) = _dex_analyzer.analyzeDexes(cbdata);
+        string memory best_buy_dex;
+        string memory best_sell_dex;
+        int256 profit_token0;
+        (best_buy_dex, best_sell_dex, profit_token0) = _dex_analyzer
+            .analyzeDexes(cbdata);
     }
 
     function uniswapV3FlashCallback(

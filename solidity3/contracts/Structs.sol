@@ -4,7 +4,7 @@ pragma abicoder v2;
 
 import "../libs/v3-periphery/contracts/libraries/PoolAddress.sol";
 
-library Libs {
+library Structs {
     struct Pair {
         address token0;
         address token1;
