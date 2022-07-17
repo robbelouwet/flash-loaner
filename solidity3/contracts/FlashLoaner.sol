@@ -13,12 +13,14 @@ import "../libs/CallbackValidation.sol";
 import "../libs/v3-periphery/contracts/libraries/TransferHelper.sol";
 import "../libs/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import "./DexAnalyzer.sol";
-import "./Structs.sol";
+import "./Libs.sol";
+import "./strategies/ILoanCalculator.sol";
 
 contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
     address _owner;
 
     DexAnalyzer _dex_analyzer;
+    ILoanCalculator _loan_calulator;
 
     modifier isOwner() {
         require(msg.sender == _owner);
@@ -29,7 +31,7 @@ contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
     using LowGasSafeMath for int256;
 
     // uniswap V3 router
-    ISwapRouter _swap_router;
+    ISwapRouter _flashloan_swap_router;
 
     constructor(
         ISwapRouter _swapRouter,
@@ -38,70 +40,66 @@ contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
         address _WETH9
     ) PeripheryImmutableState(_factory, _WETH9) {
         _dex_analyzer = DexAnalyzer(dex_analyzer);
-        _swap_router = ISwapRouter(_swapRouter);
+        _flashloan_swap_router = ISwapRouter(_swapRouter);
         _owner = msg.sender;
+        _loan_calulator = new TestAmountCalculator();
     }
 
     /// Analyze a given pair of ERC20 tokens, and see if there's an arbitrage opportunity
     /// among our known DEX's.
     ///
     /// performs a swap. If specified, fails on purpose in order to revert and see if the trade would have been profitable
-    function analyzePair(Libs.Pair memory pair, bool __revert) public {
-        address token0 = pair.token0 > pair.token1 ? pair.token1 : pair.token0;
-        address token1 = pair.token0 < pair.token1 ? pair.token1 : pair.token0;
+    function flashAnalyzePair(
+        Libs.Pair memory pair,
+        address token0,
+        address token1,
+        uint24 loan_fee
+    ) public {
+        console.log("FlashLoaner::flashAnalyzePair1");
+        console.log("token0: %s,\ntoken1: %s", token0, token1);
+        PoolAddress.PoolKey memory poolKey = PoolAddress.PoolKey({
+            token0: token0,
+            token1: token1,
+            fee: loan_fee
+        });
 
-        (amount_in, due_fee) = _loaner.loan(
-            FlashLoaner.FlashParams(
-                // e.g.: DAI
-                token0,
-                // e.g.: USDC
-                token1,
-                // fee, e.g.: 0.1 %
-                _amount_calculator.calculateFee(pair),
-                // amount of token0 tokens to loan
-                _amount_calculator.calculateAmount(pair),
-                // amount of token1 tokens to loan
-                0
-            )
-        );
-
-        PoolAddress.PoolKey memory poolKey = PoolAddress.PoolKey(
-            params.token0,
-            params.token1,
-            params.fee1
-        );
+        console.log("FlashLoaner::flashAnalyzePair2");
 
         IUniswapV3Pool pool = IUniswapV3Pool(
             PoolAddress.computeAddress(factory, poolKey)
         );
+        console.log("pool address: %s", address(pool));
 
+        console.log("FlashLoaner::flashAnalyzePair3");
+
+        uint256 loan = _loan_calulator.calculateLoan(pair);
+        console.log("FlashLoaner::flashAnalyzePair4");
         pool.flash(
             address(this), // FlashLoaner's callback needs to be triggered, not the bot
-            params.amount0,
-            params.amount1,
+            loan,
+            0,
             abi.encode(
-                FlashCallbackData({
+                Libs.FlashCallbackData({
                     pair: pair,
-                    amount0: params.amount0,
-                    amount1: params.amount1,
+                    amount0: loan,
+                    amount1: 0,
                     payer: msg.sender,
                     poolKey: poolKey,
-                    poolFee2: params.fee2,
-                    poolFee3: params.fee3
+                    _revert: true
                 })
             )
         );
-
-        require(1 == 2); // trigger a revert
     }
 
     function internalFlashCallback(Libs.FlashCallbackData memory cbdata)
         internal
+        returns (
+            string memory best_buy_dex,
+            string memory best_sell_dex,
+            uint256 amount_out_token0
+        )
     {
-        string memory best_buy_dex;
-        string memory best_sell_dex;
-        int256 profit_token0;
-        (best_buy_dex, best_sell_dex, profit_token0) = _dex_analyzer
+        (best_buy_dex, best_sell_dex, amount_out_token0) = _dex_analyzer
             .analyzeDexes(cbdata);
     }
 
@@ -117,7 +115,13 @@ contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
         CallbackValidation.verifyCallback(factory, decoded.poolKey);
 
         ///============================================
-        internalFlashCallback(decoded.pair); // swap with loaned tokens
+        // now that we have the flash loan, execute the arbitrage
+        string memory best_buy_dex;
+        string memory best_sell_dex;
+        uint256 amountOut0;
+        (best_buy_dex, best_sell_dex, amountOut0) = internalFlashCallback(
+            decoded
+        );
         ///============================================
 
         address token0 = decoded.poolKey.token0;
@@ -125,12 +129,12 @@ contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
 
         TransferHelper.safeApprove(
             token0,
-            address(_swap_router),
+            address(_flashloan_swap_router),
             decoded.amount0
         );
         // TransferHelper.safeApprove(
         //     token1,
-        //     address(_swap_router),
+        //     address(_flashloan_swap_router),
         //     decoded.amount1
         // );
 
@@ -140,44 +144,44 @@ contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
         //uint256 amount1Min = LowGasSafeMath.add(decoded.amount1, fee1);
 
         // call exactInputSingle for swapping token1 for token0 in pool w/fee2
-        uint256 amountOut0 = _swap_router.exactInputSingle(
-            ISwapRouter.ExactInputSingleParams({
-                tokenIn: token1,
-                tokenOut: token0,
-                fee: decoded.poolFee2,
-                recipient: address(this),
-                deadline: block.timestamp + 200,
-                amountIn: decoded.amount1,
-                amountOutMinimum: amount0Min,
-                sqrtPriceLimitX96: 0
-            })
-        );
-        /*
+        // uint256 amountOut0 = _flashloan_swap_router.exactInputSingle(
+        //     ISwapRouter.ExactInputSingleParams({
+        //         tokenIn: token1,
+        //         tokenOut: token0,
+        //         fee: decoded.poolFee2,
+        //         recipient: address(this),
+        //         deadline: block.timestamp + 200,
+        //         amountIn: decoded.amount1,
+        //         amountOutMinimum: amount0Min,
+        //         sqrtPriceLimitX96: 0
+        //     })
+        // );
+
         // call exactInputSingle for swapping token0 for token 1 in pool w/fee3
-        uint256 amountOut1 = _swap_router.exactInputSingle(
-            ISwapRouter.ExactInputSingleParams({
-                tokenIn: token0,
-                tokenOut: token1,
-                fee: decoded.poolFee3,
-                recipient: address(this),
-                deadline: block.timestamp + 200,
-                amountIn: decoded.amount0,
-                amountOutMinimum: amount1Min,
-                sqrtPriceLimitX96: 0
-            })
-        );
+        // uint256 amountOut1 = _flashloan_swap_router.exactInputSingle(
+        //     ISwapRouter.ExactInputSingleParams({
+        //         tokenIn: token0,
+        //         tokenOut: token1,
+        //         fee: decoded.poolFee3,
+        //         recipient: address(this),
+        //         deadline: block.timestamp + 200,
+        //         amountIn: decoded.amount0,
+        //         amountOutMinimum: amount1Min,
+        //         sqrtPriceLimitX96: 0
+        //     })
+        // );
 
         // end up with amountOut0 of token0 from first swap and amountOut1 of token1 from second swap
         uint256 amount0Owed = LowGasSafeMath.add(decoded.amount0, fee0);
-        uint256 amount1Owed = LowGasSafeMath.add(decoded.amount1, fee1);
+        // uint256 amount1Owed = LowGasSafeMath.add(decoded.amount1, fee1);
 
         TransferHelper.safeApprove(token0, address(this), amount0Owed);
-        TransferHelper.safeApprove(token1, address(this), amount1Owed);
+        // TransferHelper.safeApprove(token1, address(this), amount1Owed);
 
         if (amount0Owed > 0)
             pay(token0, address(this), msg.sender, amount0Owed);
-        if (amount1Owed > 0)
-            pay(token1, address(this), msg.sender, amount1Owed);
+        // if (amount1Owed > 0)
+        //     pay(token1, address(this), msg.sender, amount1Owed);
 
         // if profitable pay profits to payer
         if (amountOut0 > amount0Owed) {
@@ -186,10 +190,10 @@ contract FlashLoaner is IUniswapV3FlashCallback, PeripheryPayments {
             TransferHelper.safeApprove(token0, address(this), profit0);
             pay(token0, address(this), decoded.payer, profit0);
         }
-        if (amountOut1 > amount1Owed) {
-            uint256 profit1 = LowGasSafeMath.sub(amountOut1, amount1Owed);
-            TransferHelper.safeApprove(token0, address(this), profit1);
-            pay(token1, address(this), decoded.payer, profit1);
-        }*/
+        // if (amountOut1 > amount1Owed) {
+        //     uint256 profit1 = LowGasSafeMath.sub(amountOut1, amount1Owed);
+        //     TransferHelper.safeApprove(token0, address(this), profit1);
+        //     pay(token1, address(this), decoded.payer, profit1);
+        // }
     }
 }

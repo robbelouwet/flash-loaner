@@ -10,32 +10,36 @@ import "../libs/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 import "../libs/v3-core/contracts/libraries/LowGasSafeMath.sol";
 import "./DexHandler.sol";
 import "hardhat/console.sol";
-import "./Structs.sol";
+import "./Libs.sol";
+
+/// Reports the result of a reverted swap() call because it ran in 'test mode'
+/// @param profit the possibly negative amount of profit we made with this pair arbitrage
+/// @param dex_in the string ID of the dex with the most profitable buy opportuinity
+/// @param dex_out the string ID of the dex with the most profitable sell opportuinity
+error ArbitrageResult(int256 profit, string dex_in, string dex_out);
 
 contract DexAnalyzer {
     address _owner;
 
     DexHandler _dex_handler;
-    FlashLoaner _flash_loaner;
 
     modifier isOwner() {
         require(msg.sender == _owner);
         _;
     }
 
-    constructor(address dex_handler, address flash_loaner) {
-        _flash_loaner = flash_loaner;
+    constructor(address dex_handler) {
+        _dex_handler = DexHandler(dex_handler);
 
         _owner = msg.sender;
-        _dex_handler = DexHandler(dex_handler);
     }
 
-    function analyzeDexes(Structs.FlashCallbackData memory cbdata)
+    function analyzeDexes(Libs.FlashCallbackData memory cbdata)
         public
         returns (
             string memory best_buy_dex,
             string memory best_sell_dex,
-            int256 profit_token0
+            uint256 amount_out_token0
         )
     {
         // ---> token0 --->
@@ -53,16 +57,13 @@ contract DexAnalyzer {
         // ---> token1 --->
         //                  sell_dex
         // <--- token0 <---
-        uint256 amount_out_sell;
         string memory sell_dex;
-        (amount_out_sell, sell_dex) = getMaxOutPool(
+        (amount_out_token0, sell_dex) = getMaxOutPool(
             cbdata.pair.token1,
             cbdata.pair.token0,
             amount_out_buy,
             cbdata.pair
         );
-
-        profit_token0 = amount_out_sell - cbdata.amount0;
         // make token0 delta profit amount
         // is this amount great enough to surpass costs and fees?
     }
@@ -75,7 +76,7 @@ contract DexAnalyzer {
         address token_in,
         address token_out,
         uint256 amount_in,
-        Structs.Pair memory pair
+        Libs.Pair memory pair
     ) public returns (uint256 max, string memory max_pool) {
         // uniswap V3, 0.01% fee
         if (pair.uniswap_v3_100 != address(0x0)) {
@@ -174,7 +175,7 @@ contract DexAnalyzer {
         address token_in,
         address token_out,
         uint256 amount_in,
-        Structs.Pair memory pair,
+        Libs.Pair memory pair,
         bool sushiswap
     ) internal returns (uint256 amount) {
         try
@@ -189,7 +190,11 @@ contract DexAnalyzer {
         returns (uint256 _am) {
             amount = _am;
         } catch (bytes memory b) {
-            amount = abi.decode(b, (uint256));
+            console.log("bytes:");
+            console.logBytes(b);
+            if (!Libs.matchError("TradeResult(uint256)", b)) Libs.rethrow();
+            bytes memory stripped = Libs.stripSelector(b);
+            amount = abi.decode(stripped, (uint256));
         }
     }
 
@@ -197,7 +202,7 @@ contract DexAnalyzer {
         address token_in,
         address token_out,
         uint256 amount_in,
-        Structs.Pair memory pair,
+        Libs.Pair memory pair,
         uint24 fee
     ) public returns (uint256 amount) {
         try
@@ -213,61 +218,11 @@ contract DexAnalyzer {
             amount = _am;
             console.log("Try successfull: %d", amount);
         } catch (bytes memory b) {
-            if (!matchError("TradeResult(uint256)", b)) rethrow();
-            bytes memory stripped = stripSelector(b);
+            console.log("bytes:");
+            console.logBytes(b);
+            if (!Libs.matchError("TradeResult(uint256)", b)) Libs.rethrow();
+            bytes memory stripped = Libs.stripSelector(b);
             amount = abi.decode(stripped, (uint256));
-
-            console.log("Catch executed, amount: %d", amount);
         }
-    }
-
-    function strEqual(string memory str1, string memory str2)
-        internal
-        pure
-        returns (bool)
-    {
-        return (keccak256(abi.encode(str1)) == keccak256((abi.encode(str2))));
-    }
-
-    function rethrow() public pure {
-        // rethrow a caught Error
-        assembly {
-            returndatacopy(0, 0, returndatasize())
-            revert(0, returndatasize())
-        }
-    }
-
-    function matchError(string memory str, bytes memory b2)
-        internal
-        view
-        returns (bool)
-    {
-        bytes memory strBytes = abi.encodePacked(keccak256(bytes(str)));
-
-        bytes memory b1_cropped = substring(strBytes, 0, 4);
-        bytes memory b2_cropped = substring(b2, 0, 4);
-
-        return keccak256(b1_cropped) == keccak256(b2_cropped);
-    }
-
-    function substring(
-        bytes memory strBytes,
-        uint256 startIndex,
-        uint256 endIndex
-    ) internal view returns (bytes memory) {
-        bytes memory result = new bytes(endIndex - startIndex);
-
-        for (uint256 i = startIndex; i < endIndex; i++)
-            result[i - startIndex] = strBytes[i];
-
-        return result;
-    }
-
-    function stripSelector(bytes memory b)
-        internal
-        view
-        returns (bytes memory res)
-    {
-        res = substring(b, 4, b.length);
     }
 }

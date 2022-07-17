@@ -17,22 +17,25 @@ const scrapDuplicates = async () => {
         const pair = pairs[i];
         let dupe = false;
 
-        for (let j = 0; j < pairs.length; j++) {
-            const setPair = pairs[j];
-            console.log(`pair1:\n\ttoken0 (${i}): ${pair.token0}\n\ttoken1: ${pair.token1}`)
-            console.log(`pair2:\n\ttoken0 (${j}): ${setPair.token0}\n\ttoken1: ${setPair.token1}`)
+        for (let j = 0; j < pairsSet.length; j++) {
+            const setPair = pairsSet[j];
+            //console.log(`pair1:\n\ttoken0 (${i}): ${pair.token0}\n\ttoken1: ${pair.token1}`)
+            //console.log(`pair2:\n\ttoken0 (${j}): ${setPair.token0}\n\ttoken1: ${setPair.token1}`
 
             if (pair["token0"] === setPair["token0"] &&
-                pair["token1"] === setPair["token1"] &&
-                i != j)
-
+                pair["token1"] === setPair["token1"]) {
                 dupe = true;
+            }
+
+            if (dupe && i === j) {
+                console.log(`False positive: i: ${i}, j:${j}\npair: ${JSON.stringify(pair, null, 2)}\nsetPair: ${JSON.stringify(setPair, null, 2)}`)
+            }
         }
 
         if (!dupe) {
             const res = more_than_2(pair)
             if (res != undefined) {
-                console.log(res)
+                //console.log(res)
                 pairsSet.push(res)
             }
         }
@@ -48,9 +51,8 @@ const more_than_2 = (pair) => {
 
     for (const [key, value] of Object.entries(pair)) {
         if (key === "token0" || key === "token1") continue
-        else if (web3.utils.toBN(value).isZero())
-            pair[key] = "0x0"
-        else hits++;
+        else if (!web3.utils.toBN(value).isZero())
+            hits++;
     }
     if (hits >= 2)
         return pair

@@ -9,7 +9,7 @@ import "../libs/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
 import "../libs/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
 import "../libs/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 import "../libs/v3-core/contracts/libraries/LowGasSafeMath.sol";
-import "./Structs.sol";
+import "./Libs.sol";
 
 /// Reports the result of a reverted swap() call because it ran in 'test mode'
 /// @param amount the amount of tokens we would've gotton back from this trade
@@ -36,7 +36,7 @@ contract DexHandler {
         address token_in,
         address token_out,
         uint256 amount_in,
-        Structs.Pair memory pair,
+        Libs.Pair memory pair,
         uint24 fee,
         bool test_revert
     ) external returns (uint256 amount) {
@@ -52,12 +52,12 @@ contract DexHandler {
                 sqrtPriceLimitX96: 0
             });
 
-        amount = ISwapRouter(_routers["uniswap_v3"]).exactInputSingle(params);
+        amount = 1005; //amount = ISwapRouter(_routers["uniswap_v3"]).exactInputSingle(params);
         if (test_revert) revert TradeResult(amount);
     }
 
     function uniswapV2AmountOut(
-        Structs.Pair memory pair,
+        Libs.Pair memory pair,
         address token_in,
         address token_out,
         uint256 amount_in,
@@ -77,7 +77,7 @@ contract DexHandler {
         uint32 _block;
         (reserve_in, reserve_out, _block) = pair.getReserves();
 
-        amount = 257; //amount = r.quote(amount_in, reserve_in, reserve_out);
+        amount = 1003; //amount = r.quote(amount_in, reserve_in, reserve_out);
 
         if (test_revert) revert TradeResult(amount);
     }

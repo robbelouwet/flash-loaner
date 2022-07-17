@@ -31,7 +31,7 @@ library PoolAddress {
     /// @param key The PoolKey
     /// @return pool The contract address of the V3 pool
     function computeAddress(address factory, PoolKey memory key) internal pure returns (address pool) {
-        require(key.token0 < key.token1);
+        require(key.token0 < key.token1, 'PoolAddress::computeAddress: token0 needs to be smaller than token1!');
         bytes32 _hash = keccak256(
             abi.encodePacked(
                 hex'ff',
