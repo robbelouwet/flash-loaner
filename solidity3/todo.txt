@@ -1,0 +1,6 @@
+1) breng elke pool van elk pair in equilibrium, niet alleen de hoogste en de laagste
+2) loan van pool van een ander pair
+3) OptimalAmountCalculator
+    implementeer een manier om een heuristische waarde af te schatten voor het te lenen amount
+    hoeveel slippage laten we toe?
+    meer slippage betekent minder RELATIEVE winst maar meer ABSOLUTE winst

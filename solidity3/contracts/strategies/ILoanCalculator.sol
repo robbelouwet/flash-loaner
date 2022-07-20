@@ -23,7 +23,6 @@ contract TestAmountCalculator is ILoanCalculator {
         override
         returns (uint256 amount)
     {
-        /// just return 1000 tokens
         return 1000;
     }
 }

@@ -23,16 +23,24 @@ describe("FlashBot", function () {
         _dex_handler = await dex_handler.deployed()
 
         // Dex Analyzer
-        const DexAnalyzer = await hre.ethers.getContractFactory("DexAnalyzer", {
-            libraries: {
-                Libs: deployed_libs.address
+        const DexAnalyzer = await hre.ethers.getContractFactory("DexAnalyzer",
+            {
+                libraries: {
+                    Libs: deployed_libs.address
+                }
             }
-        });
+        );
         const dex_analyzer = await DexAnalyzer.deploy(_dex_handler.address)
         _dex_analyzer = await dex_analyzer.deployed()
 
         // Flash Loaner
-        const FlashLoaner = await hre.ethers.getContractFactory("FlashLoaner");
+        const FlashLoaner = await hre.ethers.getContractFactory("FlashLoaner",
+            // {
+            //     libraries: {
+            //         Libs: deployed_libs.address
+            //     }
+            // }
+        );
         const flash_loaner = await FlashLoaner.deploy(
             web3.utils.toChecksumAddress('0xE592427A0AEce92De3Edee1F18E0157C05861564'), // SwapRouter, all nets
             _dex_analyzer.address,
@@ -42,7 +50,13 @@ describe("FlashBot", function () {
         _flash_loaner = await flash_loaner.deployed();
 
         // Bot
-        const Bot = await hre.ethers.getContractFactory("Bot");
+        const Bot = await hre.ethers.getContractFactory("Bot",
+            // {
+            //     libraries: {
+            //         Libs: deployed_libs.address
+            //     }
+            // }
+        );
         const bot = await Bot.deploy(
             _flash_loaner.address
         )

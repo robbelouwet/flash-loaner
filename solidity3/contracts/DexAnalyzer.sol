@@ -14,8 +14,8 @@ import "./Libs.sol";
 
 /// Reports the result of a reverted swap() call because it ran in 'test mode'
 /// @param profit the possibly negative amount of profit we made with this pair arbitrage
-/// @param dex_in the string ID of the dex with the most profitable buy opportuinity
-/// @param dex_out the string ID of the dex with the most profitable sell opportuinity
+/// @param dex_in the string ID of the dex with the most profitable buy opportunity
+/// @param dex_out the string ID of the dex with the most profitable sell opportunity
 error ArbitrageResult(int256 profit, string dex_in, string dex_out);
 
 contract DexAnalyzer {
@@ -42,6 +42,7 @@ contract DexAnalyzer {
             uint256 amount_out_token0
         )
     {
+        console.log("Entered analyzeDexes");
         // ---> token0 --->
         //                  buy_dex?
         // <--- token1 <---
@@ -52,6 +53,10 @@ contract DexAnalyzer {
             cbdata.pair.token1,
             cbdata.amount0,
             cbdata.pair
+        );
+        console.log(
+            "analyzeDexes: did getMaxOutPool successfully, max: %d",
+            amount_out_buy
         );
 
         // ---> token1 --->
@@ -64,6 +69,11 @@ contract DexAnalyzer {
             amount_out_buy,
             cbdata.pair
         );
+        console.log(
+            "analyzeDexes: did getMinOutPool successfully, return token0: %d",
+            amount_out_token0
+        );
+
         // make token0 delta profit amount
         // is this amount great enough to surpass costs and fees?
     }
@@ -90,6 +100,7 @@ contract DexAnalyzer {
 
             max = am > max ? am : max;
             max_pool = am > max ? "uniswap_v3_100" : max_pool;
+            console.log("Calculated uniswap_v3_100: %d", am);
         }
 
         // uniswap V3, 0.5% fee
@@ -103,6 +114,7 @@ contract DexAnalyzer {
             );
             max = am > max ? am : max;
             max_pool = am > max ? "uniswap_v3_500" : max_pool;
+            console.log("Calculated uniswap_v3_500: %d", am);
         }
 
         // uniswap V3, 0.3% fee
@@ -116,6 +128,7 @@ contract DexAnalyzer {
             );
             max = am > max ? am : max;
             max_pool = am > max ? "uniswap_v3_1000" : max_pool;
+            console.log("Calculated uniswap_v3_1000: %d", am);
         }
 
         // uniswap V3, 0.3% fee
@@ -129,6 +142,7 @@ contract DexAnalyzer {
             );
             max = am > max ? am : max;
             max_pool = am > max ? "uniswap_v3_3000" : max_pool;
+            console.log("Calculated uniswap_v3_3000: %d", am);
         }
 
         // uniswap V3, 1% fee
@@ -142,6 +156,7 @@ contract DexAnalyzer {
             );
             max = am > max ? am : max;
             max_pool = am > max ? "uniswap_v3_10000" : max_pool;
+            console.log("Calculated uniswap_v3_10000: %d", am);
         }
 
         // uniswap V2
@@ -155,6 +170,7 @@ contract DexAnalyzer {
             );
             max = am > max ? am : max;
             max_pool = am > max ? "sushiswap" : max_pool;
+            console.log("Calculated sushiswap: %d", am);
         }
 
         // sushiswap
@@ -168,6 +184,7 @@ contract DexAnalyzer {
             );
             max = am > max ? am : max;
             max_pool = am > max ? "uniswap_v2" : max_pool;
+            console.log("Calculated uniswap_v2: %d", am);
         }
     }
 
@@ -189,12 +206,12 @@ contract DexAnalyzer {
             )
         returns (uint256 _am) {
             amount = _am;
+        } catch Error(string memory str) {
+            Libs.rethrowError(str);
+        } catch Panic(uint256 reason) {
+            Libs.handlePanic(reason);
         } catch (bytes memory b) {
-            console.log("bytes:");
-            console.logBytes(b);
-            if (!Libs.matchError("TradeResult(uint256)", b)) Libs.rethrow();
-            bytes memory stripped = Libs.stripSelector(b);
-            amount = abi.decode(stripped, (uint256));
+            amount = Libs.parseRawError(b);
         }
     }
 
@@ -217,12 +234,12 @@ contract DexAnalyzer {
         returns (uint256 _am) {
             amount = _am;
             console.log("Try successfull: %d", amount);
+        } catch Error(string memory str) {
+            Libs.parseReasonedError(str);
+        } catch Panic(uint256 reason) {
+            Libs.handlePanic(reason);
         } catch (bytes memory b) {
-            console.log("bytes:");
-            console.logBytes(b);
-            if (!Libs.matchError("TradeResult(uint256)", b)) Libs.rethrow();
-            bytes memory stripped = Libs.stripSelector(b);
-            amount = abi.decode(stripped, (uint256));
+            amount = Libs.parseRawError(b);
         }
     }
 }

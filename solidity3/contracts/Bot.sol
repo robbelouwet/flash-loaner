@@ -35,6 +35,11 @@ contract Bot {
         // first execute trades optimistically and then revert to see which Trades are profitable
         for (uint256 i = 0; i < _common_pairs.length; i++) {
             Libs.Pair memory pair = _common_pairs[i];
+            if (i != 0) continue;
+            console.log("%dth pair", i);
+            // if (pair.token0 != 0xdac17f958d2ee523a2206206994597c13d831ec7 &&
+            //     pair.token1 != 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48 &&
+            //     )
             Libs.Trade memory trade;
             address loan_pool_token1;
             uint24 loan_fee;
@@ -52,13 +57,15 @@ contract Bot {
             // {
             //     // should never enter
             //     revert("Entered unreachable try block, Bot::start");
+            // } catch Error(string memory str) {
+            //     Libs.rethrowError(str);
             // } catch (bytes memory b) {
             //     // catch the arbitrage error
             //     console.log("Bytes:");
             //     console.logBytes(b);
             //     if (
             //         !Libs.matchError("ArbitrageResult(int256,string,string)", b)
-            //     ) Libs.rethrow();
+            //     ) Libs.rethrowRaw();
             //     bytes memory stripped = Libs.stripSelector(b);
 
             //     // decode exception data
@@ -89,7 +96,13 @@ contract Bot {
         returns (address token1, uint24 loan_fee)
     {
         console.log("bot::findDifferentPool");
-        return (pair.token1, 100);
+        uint24 fee;
+        if (pair.uniswap_v3_100 != address(0x0)) fee = 100;
+        if (pair.uniswap_v3_500 != address(0x0)) fee = 500;
+        if (pair.uniswap_v3_1000 != address(0x0)) fee = 1000;
+        if (pair.uniswap_v3_3000 != address(0x0)) fee = 3000;
+        if (pair.uniswap_v3_10000 != address(0x0)) fee = 10000;
+        return (pair.token1, fee);
     }
 
     function performProfitableTrade(Libs.Trade memory trades) internal {
